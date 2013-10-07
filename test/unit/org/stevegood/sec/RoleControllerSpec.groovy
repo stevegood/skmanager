@@ -1,13 +1,13 @@
-package org.stevegood.sk
+package org.stevegood.sec
 
 
 
 import grails.test.mixin.*
 import spock.lang.*
 
-@TestFor(RaidManagerController)
-@Mock(RaidManager)
-class RaidManagerControllerSpec extends Specification {
+@TestFor(RoleController)
+@Mock(Role)
+class RoleControllerSpec extends Specification {
 
     def populateValidParams(params) {
         assert params != null
@@ -21,8 +21,8 @@ class RaidManagerControllerSpec extends Specification {
             controller.index()
 
         then:"The model is correct"
-            !model.raidManagerInstanceList
-            model.raidManagerInstanceCount == 0
+            !model.roleInstanceList
+            model.roleInstanceCount == 0
     }
 
     void "Test the create action returns the correct model"() {
@@ -30,31 +30,31 @@ class RaidManagerControllerSpec extends Specification {
             controller.create()
 
         then:"The model is correctly created"
-            model.raidManagerInstance!= null
+            model.roleInstance!= null
     }
 
     void "Test the save action correctly persists an instance"() {
 
         when:"The save action is executed with an invalid instance"
-            def raidManager = new RaidManager()
-            raidManager.validate()
-            controller.save(raidManager)
+            def role = new Role()
+            role.validate()
+            controller.save(role)
 
         then:"The create view is rendered again with the correct model"
-            model.raidManagerInstance!= null
+            model.roleInstance!= null
             view == 'create'
 
         when:"The save action is executed with a valid instance"
             response.reset()
             populateValidParams(params)
-            raidManager = new RaidManager(params)
+            role = new Role(params)
 
-            controller.save(raidManager)
+            controller.save(role)
 
         then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/raidManager/show/1'
+            response.redirectedUrl == '/role/show/1'
             controller.flash.message != null
-            RaidManager.count() == 1
+            Role.count() == 1
     }
 
     void "Test that the show action returns the correct model"() {
@@ -66,11 +66,11 @@ class RaidManagerControllerSpec extends Specification {
 
         when:"A domain instance is passed to the show action"
             populateValidParams(params)
-            def raidManager = new RaidManager(params)
-            controller.show(raidManager)
+            def role = new Role(params)
+            controller.show(role)
 
         then:"A model is populated containing the domain instance"
-            model.raidManagerInstance == raidManager
+            model.roleInstance == role
     }
 
     void "Test that the edit action returns the correct model"() {
@@ -82,11 +82,11 @@ class RaidManagerControllerSpec extends Specification {
 
         when:"A domain instance is passed to the edit action"
             populateValidParams(params)
-            def raidManager = new RaidManager(params)
-            controller.edit(raidManager)
+            def role = new Role(params)
+            controller.edit(role)
 
         then:"A model is populated containing the domain instance"
-            model.raidManagerInstance == raidManager
+            model.roleInstance == role
     }
 
     void "Test the update action performs an update on a valid domain instance"() {
@@ -98,22 +98,22 @@ class RaidManagerControllerSpec extends Specification {
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
-            def raidManager = new RaidManager()
-            raidManager.validate()
-            controller.update(raidManager)
+            def role = new Role()
+            role.validate()
+            controller.update(role)
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.raidManagerInstance == raidManager
+            model.roleInstance == role
 
         when:"A valid domain instance is passed to the update action"
             response.reset()
             populateValidParams(params)
-            raidManager = new RaidManager(params).save(flush: true)
-            controller.update(raidManager)
+            role = new Role(params).save(flush: true)
+            controller.update(role)
 
         then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/raidManager/show/$raidManager.id"
+            response.redirectedUrl == "/role/show/$role.id"
             flash.message != null
     }
 
@@ -127,17 +127,17 @@ class RaidManagerControllerSpec extends Specification {
         when:"A domain instance is created"
             response.reset()
             populateValidParams(params)
-            def raidManager = new RaidManager(params).save(flush: true)
+            def role = new Role(params).save(flush: true)
 
         then:"It exists"
-            RaidManager.count() == 1
+            Role.count() == 1
 
         when:"The domain instance is passed to the delete action"
-            controller.delete(raidManager)
+            controller.delete(role)
 
         then:"The instance is deleted"
-            RaidManager.count() == 0
-            response.redirectedUrl == '/raidManager/index'
+            Role.count() == 0
+            response.redirectedUrl == '/role/index'
             flash.message != null
     }
 }
