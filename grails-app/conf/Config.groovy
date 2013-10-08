@@ -11,6 +11,7 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
+grails.app.context='/'
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
@@ -119,6 +120,7 @@ log4j = {
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'org.stevegood.sec.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'org.stevegood.sec.UserRole'
 grails.plugin.springsecurity.authority.className = 'org.stevegood.sec.Role'
+grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                              ['permitAll'],
 	'/index':                         ['permitAll'],
@@ -127,6 +129,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/css/**':                     ['permitAll'],
 	'/**/images/**':                  ['permitAll'],
 	'/**/favicon.ico':                ['permitAll'],
-	'/**/**':                ['permitAll'],
+    '/admin/**':                      ['ROLE_ADMIN'],
+    '/**':                            ['IS_AUTHENTICATED_FULLY']
 ]
 
