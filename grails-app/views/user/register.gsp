@@ -11,6 +11,7 @@
 <head>
   <title>Register New Account</title>
     <meta name="layout" content="main" />
+    <r:require module="user_registration" />
 </head>
 <body>
 
@@ -29,7 +30,7 @@
         <div class="col-lg-6 col-lg-offset-3">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <g:form url="[resource:userInstance, action:'saveRegistration']"
+                    <g:form id="registration_form" url="[resource:userInstance, action:'saveRegistration']"
                             class="form-horizontal" role="form">
                         <div class="form-group">
                             <label for='username' class="col-lg-3 control-label"><g:message code="springSecurity.login.username.label"/>:</label>
