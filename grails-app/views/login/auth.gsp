@@ -21,14 +21,16 @@
                         <div class="form-group">
                             <label for='username' class="col-lg-3 control-label"><g:message code="springSecurity.login.username.label"/>:</label>
                             <div class="col-lg-9">
-                                <input type='text' class='form-control' name='j_username' id='username' placeholder="${message(code: 'springSecurity.login.username.label')}"/>
+                                <input type='text' class='form-control' name='j_username' id='username' value="${params?.username}"
+                                       placeholder="${message(code: 'springSecurity.login.username.label')}"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for='password' class="col-lg-3 control-label"><g:message code="springSecurity.login.password.label"/>:</label>
                             <div class="col-lg-9">
-                                <input type='password' class='form-control' name='j_password' id='password' placeholder="${message(code: 'springSecurity.login.password.label')}"/>
+                                <input type='password' class='form-control' name='j_password' id='password'
+                                       placeholder="${message(code: 'springSecurity.login.password.label')}"/>
                             </div>
                         </div>
 
@@ -50,6 +52,10 @@
                             </div>
                         </div>
                     </form>
+                </div>
+
+                <div class="panel-footer">
+                    <span class="text-muted">Don't have an account? <g:link controller="user" action="register">Register now!</g:link></span>
                 </div>
             </div>
 

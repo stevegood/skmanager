@@ -46,6 +46,36 @@ class UserController {
         }
     }
 
+    def register() {
+        respond new User(params)
+    }
+
+    @Transactional
+    def saveRegistration() {
+        def userInstance = new User(params)
+
+        if (params.password != params.password2) {
+            flash.message = message(code: 'passwords.dont.match', default: 'Passwords don\'t match.')
+            respond userInstance.errors, view: 'register'
+            return
+        }
+
+        if (userInstance.hasErrors()) {
+            respond userInstance.errors, view:'register'
+            return
+        }
+
+        userInstance.save flush:true
+
+        request.withFormat {
+            form {
+                flash.message = message(code: 'default.created.message', args: [message(code: 'userInstance.label', default: 'User'), userInstance.id])
+                redirect controller: 'login', action: 'auth', params: [username: userInstance.username]
+            }
+            '*' { respond userInstance, [status: CREATED] }
+        }
+    }
+
     def edit(User userInstance) {
         respond userInstance
     }
