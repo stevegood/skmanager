@@ -49,11 +49,11 @@ class Raid {
         RaidMember.findAllByRaid(this) ?: []
     }
 
-    def addMember(PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
+    def addPlayerCharacter(PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
             RaidMember.create(this, character, substitute, onLeave)
     }
 
-    def removeMember(PlayerCharacter character) {
+    def removePlayerCharacter(PlayerCharacter character) {
         RaidMember.findByRaidAndCharacter(this, character)?.delete(flush: true)
     }
 

@@ -26,6 +26,30 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">My Raids</h3>
+                </div>
+                <div class="panel-body">
+                    %{-- show my raids --}%
+                    <ul>
+                        <g:each in="${raidList}" var="raid">
+                            <li>
+                                <g:link controller="raid" action="show" id="${raid.id}">${raid.name}</g:link>
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+%{-- TODO: remove controller links --}%
+<hr>
+<div class="container">
+    <div class="row">
         <div class="col-lg-12">
             <div id="controller-list" role="navigation">
                 <h2>Available Controllers:</h2>

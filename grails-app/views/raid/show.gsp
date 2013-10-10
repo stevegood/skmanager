@@ -6,75 +6,99 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'raid.label', default: 'Raid')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
+        <r:require module="bootstrap_js" />
 	</head>
 	<body>
-		<a href="#show-raid" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="show-raid" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<ol class="property-list raid">
-			
-				<g:if test="${raidInstance?.owner}">
-				<li class="fieldcontain">
-					<span id="owner-label" class="property-label"><g:message code="raid.owner.label" default="Owner" /></span>
-					
-						<span class="property-value" aria-labelledby="owner-label"><g:link controller="user" action="show" id="${raidInstance?.owner?.id}">${raidInstance?.owner?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${raidInstance?.dateCreated}">
-				<li class="fieldcontain">
-					<span id="dateCreated-label" class="property-label"><g:message code="raid.dateCreated.label" default="Date Created" /></span>
-					
-						<span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${raidInstance?.dateCreated}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${raidInstance?.hidden}">
-				<li class="fieldcontain">
-					<span id="hidden-label" class="property-label"><g:message code="raid.hidden.label" default="Hidden" /></span>
-					
-						<span class="property-value" aria-labelledby="hidden-label"><g:formatBoolean boolean="${raidInstance?.hidden}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${raidInstance?.lastUpdated}">
-				<li class="fieldcontain">
-					<span id="lastUpdated-label" class="property-label"><g:message code="raid.lastUpdated.label" default="Last Updated" /></span>
-					
-						<span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${raidInstance?.lastUpdated}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${raidInstance?.name}">
-				<li class="fieldcontain">
-					<span id="name-label" class="property-label"><g:message code="raid.name.label" default="Name" /></span>
-					
-						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${raidInstance}" field="name"/></span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form url="[resource:raidInstance, action:'delete']" method="DELETE">
-				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${raidInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
-		</div>
+
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2>
+                        <g:link controller="user" action="show" id="${raidInstance?.owner?.id}">
+                            ${raidInstance?.owner?.username.capitalize()}'s
+                        </g:link>
+                        ${raidInstance.name}
+                    </h2>
+                </div>
+                <div class="col-lg-4 btns">
+                    <sec:ifLoggedIn>
+                        <g:if test="${sec.loggedInUserInfo(field: 'username') == raidInstance.owner.username || sec.ifAllGranted(roles: ['ROLE_ADMIN'])}">
+                            <g:form url="[resource:raidInstance, action:'delete']" method="DELETE" class="pull-right">
+                                <button id="add-character-btn" type="button" class="btn btn-primary">Add Character</button>
+                                <g:link class="btn btn-info" action="edit" resource="${raidInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+                                <g:actionSubmit class="btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                            </g:form>
+                        </g:if>
+                    </sec:ifLoggedIn>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <g:each in="${characterClasses}" var="charClass">
+                <div class="col-lg-${colWidth}">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">${charClass.name}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                %{-- TODO: list characters by class --}%
+                                <g:each in="${raidInstance.members.collect{ it.character }.sort { it.name }}" var="pc">
+                                    <g:if test="${pc.characterClass == charClass}">
+                                        <li>
+                                            <g:link controller="playerCharacter" action="show" id="${pc.id}">${pc.name}</g:link>
+                                        </li>
+                                    </g:if>
+                                </g:each>
+                            </ul>
+                        </div>
+                        <div class="panel-footer"></div>
+                    </div>
+                </div>
+            </g:each>
+        </div>
+    </div>
+
+    <div id="add-character-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add Character to Raid</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="add-character-form" class="form form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label" for="add-character-select">Character *:</label>
+                            <div class="col-lg-9">
+                                <select id="add-character-select" class="form-control" required="required"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label" for="add-character-note">Note:</label>
+                            <div class="col-lg-9">
+                                <textarea class="form-control" id="add-character-note" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-add-character-btn" type="button" class="btn btn-primary" disabled="disabled">Add Character</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <r:script>
+    var skmanager = skmanager || {};
+        skmanager.raid = {id: ${raidInstance.id}};
+    </r:script>
+    <g:javascript src="raid/show.js" />
+
 	</body>
 </html>

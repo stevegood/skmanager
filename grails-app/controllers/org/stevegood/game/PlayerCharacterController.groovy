@@ -1,6 +1,8 @@
 package org.stevegood.game
 
-
+import grails.converters.JSON
+import org.stevegood.sk.Raid
+import org.stevegood.sk.RaidMember
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -90,6 +92,17 @@ class PlayerCharacterController {
             }
             '*'{ render status: NO_CONTENT }
         }
+    }
+
+    def availableForRaid() {
+        Raid raid = Raid.get(params.raid_id)
+        def pcs = PlayerCharacter.withCriteria {
+            raid.members.each { RaidMember raidMember ->
+                ne 'id', raidMember.character.id
+            }
+        }
+        def result = [playerCharacters: pcs]
+        render result as JSON
     }
 
     protected void notFound() {

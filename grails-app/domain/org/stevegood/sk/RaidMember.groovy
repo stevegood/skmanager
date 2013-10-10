@@ -23,7 +23,7 @@ class RaidMember {
     }
 
     static RaidMember create(Raid raid, PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
-        RaidMember raidMember = RaidMember.findOrCreateByRaidAndMember(raid, character)
+        RaidMember raidMember = RaidMember.findOrCreateByRaidAndCharacter(raid, character)
         raidMember.substitute = substitute
         raidMember.onLeave = onLeave
         raidMember.save(flush: true)

@@ -1,6 +1,9 @@
 package org.stevegood.sk
 
-
+import grails.converters.JSON
+import org.stevegood.game.CharacterClass
+import org.stevegood.game.PlayerCharacter
+import org.stevegood.sec.User
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -10,13 +13,24 @@ class RaidController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def springSecurityService
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond Raid.list(params), model:[raidInstanceCount: Raid.count()]
     }
 
     def show(Raid raidInstance) {
-        respond raidInstance
+        if (!raidInstance || (raidInstance.hidden && (raidInstance.owner.username != springSecurityService.currentUser.username || sec.ifAllGranted(roles: ['ROLE_ADMIN'])))) {
+            flash.message = "You are not premitted to view that Raid."
+            redirect controller: 'dashboard', action: 'index'
+            return
+        }
+
+        def characterClasses = CharacterClass.list()
+        def colWidth = characterClasses.size() ? 12 / characterClasses.size() : 0
+
+        [raidInstance: raidInstance, characterClasses: characterClasses, colWidth: colWidth]
     }
 
     def create() {
@@ -29,6 +43,9 @@ class RaidController {
             notFound()
             return
         }
+
+        User currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        raidInstance.owner = currentUser
 
         if (raidInstance.hasErrors()) {
             respond raidInstance.errors, view:'create'
@@ -90,6 +107,15 @@ class RaidController {
             }
             '*'{ render status: NO_CONTENT }
         }
+    }
+
+    @Transactional
+    def addCharacter() {
+        def pc = PlayerCharacter.get(params.pc_id)
+        def raid = Raid.get(params.raid_id)
+        def raidMember = raid.addPlayerCharacter(pc)
+        raidMember.note = params.note
+        render raidMember as JSON
     }
 
     protected void notFound() {
