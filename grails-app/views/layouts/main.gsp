@@ -40,6 +40,9 @@
                         <li>
                             <g:link controller="raid" action="create">Create Raid</g:link>
                         </li>
+                        <li>
+                            <g:link controller="playerCharacter" action="create">Create Character</g:link>
+                        </li>
                         <sec:ifAllGranted roles="ROLE_ADMIN">
                             <li>
                                 <g:link controller="admin" action="index">Admin</g:link>

@@ -9,7 +9,7 @@ class PlayerCharacter {
 
     String name
     CharacterClass characterClass
-    int level
+    int level = 1
     String note
 
     static constraints = {
