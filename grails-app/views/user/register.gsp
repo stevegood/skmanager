@@ -18,7 +18,7 @@
 <div class="page-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6 col-lg-offset-3">
                 <h1>Register New Account</h1>
             </div>
         </div>
@@ -29,6 +29,10 @@
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Create an account</h3>
+                </div>
+
                 <div class="panel-body">
                     <g:form id="registration_form" url="[resource:userInstance, action:'saveRegistration']"
                             class="form-horizontal" role="form">
@@ -63,6 +67,10 @@
                             </div>
                         </div>
                     </g:form>
+                </div>
+
+                <div class="panel-footer">
+                    Already have an account? <g:link controller="login" action="auth">Login now.</g:link>
                 </div>
             </div>
 
