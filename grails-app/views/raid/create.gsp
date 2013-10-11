@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'raid.label', default: 'Raid')}" />
-		<title><g:message code="default.create.label" args="[entityName]" /></title>
+		<title>Create Raid</title>
 	</head>
 	<body>
 
@@ -11,7 +10,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3">
-                    <h1><g:message code="default.create.label" args="[entityName]" /></h1>
+                    <h1>Create Raid</h1>
                 </div>
             </div>
         </div>

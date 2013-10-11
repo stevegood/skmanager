@@ -34,7 +34,7 @@ class RaidController {
     }
 
     def create() {
-        respond new Raid(params)
+        [raidInstance: new Raid(params)]
     }
 
     @Transactional
