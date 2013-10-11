@@ -1,11 +1,13 @@
 
 <%@ page import="org.stevegood.sk.Raid" %>
+<g:set var="canManage" value="${sec.loggedInUserInfo(field: 'username') == raidInstance.owner.username || sec.ifAllGranted(roles: ['ROLE_ADMIN'])}"/>
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'raid.label', default: 'Raid')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
+		<title>${raidInstance?.owner?.username.capitalize()}'s ${raidInstance.name}</title>
         <r:require module="bootstrap_js" />
 	</head>
 	<body>
@@ -23,11 +25,18 @@
                 </div>
                 <div class="col-lg-4 btns">
                     <sec:ifLoggedIn>
-                        <g:if test="${sec.loggedInUserInfo(field: 'username') == raidInstance.owner.username || sec.ifAllGranted(roles: ['ROLE_ADMIN'])}">
+                        <g:if test="${canManage}">
                             <g:form url="[resource:raidInstance, action:'delete']" method="DELETE" class="pull-right">
-                                <button id="add-character-btn" type="button" class="btn btn-primary">Add Character</button>
-                                <g:link class="btn btn-info" action="edit" resource="${raidInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-                                <g:actionSubmit class="btn btn-danger" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+                                <button id="add-character-btn" type="button" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </button>
+                                <g:link class="btn btn-info" action="edit" resource="${raidInstance}">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </g:link>
+                                <button type="submit" name="_action_delete" class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
                             </g:form>
                         </g:if>
                     </sec:ifLoggedIn>
@@ -45,18 +54,36 @@
                             <h3 class="panel-title">${charClass.name}</h3>
                         </div>
                         <div class="panel-body">
-                            <ul>
+                            <div class="container">
                                 %{-- TODO: list characters by class --}%
-                                <g:each in="${raidInstance.members.collect{ it.character }.sort { it.name }}" var="pc">
-                                    <g:if test="${pc.characterClass == charClass}">
-                                        <li>
-                                            <g:link controller="playerCharacter" action="show" id="${pc.id}">${pc.name}</g:link>
-                                        </li>
-                                    </g:if>
+                                <g:set var="classList" value="${raidInstance.members.findAll { it.character.characterClass == charClass }.sort{ it.listPosition }}" />
+                                <g:each in="${classList}" var="raidMember" status="i">
+                                    <div class="row highlight-on-hover">
+                                        <div class="col-lg-8">
+                                            <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">${raidMember.character.name}</g:link>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <g:if test="${canManage && i < classList.size()-1}">
+                                                <button class="btn btn-warning btn-xs move-to-bottom-btn" type="button" value="${raidMember.id}">
+                                                    <span class="glyphicon glyphicon-arrow-down"></span>
+
+                                                </button>
+                                            </g:if>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <g:if test="${canManage}">
+                                                <button class="btn btn-danger btn-xs">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </g:if>
+                                        </div>
+                                    </div>
                                 </g:each>
-                            </ul>
+                            </div>
                         </div>
-                        <div class="panel-footer"></div>
+                        <div class="panel-footer text-muted">
+                            ${classList.size()} ${charClass.name}<g:if test="${classList.size() > 1 || classList.size() == 0}">s</g:if>
+                        </div>
                     </div>
                 </div>
             </g:each>

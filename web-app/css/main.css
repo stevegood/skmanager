@@ -10,3 +10,7 @@ body {
 .page-header .btns {
     padding-top: 21px;
 }
+
+.highlight-on-hover:hover {
+    background-color: #f5f5f5;
+}

@@ -98,6 +98,8 @@ class RaidController {
             return
         }
 
+        // delete the raid member relationships first
+        raidInstance.members*.delete flush: true
         raidInstance.delete flush:true
 
         request.withFormat {

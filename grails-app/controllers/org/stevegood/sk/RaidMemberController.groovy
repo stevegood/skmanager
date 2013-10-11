@@ -1,6 +1,7 @@
 package org.stevegood.sk
 
-
+import grails.converters.JSON
+import org.stevegood.sec.User
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -9,6 +10,8 @@ import grails.transaction.Transactional
 class RaidMemberController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+
+    def springSecurityService
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -90,6 +93,31 @@ class RaidMemberController {
             }
             '*'{ render status: NO_CONTENT }
         }
+    }
+
+    @Transactional
+    def moveToBottom() {
+        def raidMember = RaidMember.get(params.raid_member_id)
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+
+        if (!(currentUser == raidMember?.raid?.owner || raidMember?.raid?.managers?.contains(currentUser))) {
+            notFound()
+            return
+        }
+
+        def classList = []
+        raidMember.raid.members.sort { it.listPosition }.each {
+            // collect all the members of the same class except the member about to be placed at the bottom
+            if (it.character.characterClass == raidMember.character.characterClass && raidMember != it) {
+                it.listPosition = classList.size()
+                it.save()
+                classList << it
+            }
+        }
+        raidMember.listPosition = classList.size()
+        raidMember.save()
+        classList << raidMember
+        render classList as JSON
     }
 
     protected void notFound() {

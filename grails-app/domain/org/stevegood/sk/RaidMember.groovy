@@ -11,11 +11,13 @@ class RaidMember {
     PlayerCharacter character
     boolean substitute = false
     boolean onLeave = false
+    int listPosition
     String note
 
     static constraints = {
         note nullable: true, blank: true
         raid unique: ['character']
+        listPosition nullable: false
     }
 
     static mapping = {
@@ -26,6 +28,13 @@ class RaidMember {
         RaidMember raidMember = RaidMember.findOrCreateByRaidAndCharacter(raid, character)
         raidMember.substitute = substitute
         raidMember.onLeave = onLeave
+        def characterClassCount = 0
+        raid.members.each {
+            if (it.character.characterClass == character.characterClass) {
+                characterClassCount++
+            }
+        }
+        raidMember.listPosition = characterClassCount
         raidMember.save(flush: true)
     }
 }
