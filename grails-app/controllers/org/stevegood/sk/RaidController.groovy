@@ -64,7 +64,7 @@ class RaidController {
     }
 
     def edit(Raid raidInstance) {
-        respond raidInstance
+        [raidInstance: raidInstance]
     }
 
     @Transactional
