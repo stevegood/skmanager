@@ -26,9 +26,7 @@ skmanager.addCharacterToRaid = function($select, $note, $modal) {
     $.getJSON('/raid/addCharacter', {raid_id: skmanager.raid.id, pc_id: $select.val(), note: $note.val()}, function(result){
         // handle the result by reloading the page
         $modal.modal('hide');
-        setTimeout(function(){
-            window.location = window.location;
-        }, 1000);
+        window.location = window.location;
     });
 };
 

@@ -1,6 +1,9 @@
 
 <%@ page import="org.stevegood.sk.Raid" %>
-<g:set var="canManage" value="${sec.loggedInUserInfo(field: 'username') == raidInstance.owner.username || sec.ifAllGranted(roles: ['ROLE_ADMIN'])}"/>
+<g:set var="canManage" value="${sec.loggedInUserInfo(field: 'username') == raidInstance.owner.username}"/>
+<sec:ifAllGranted roles="ROLE_ADMIN">
+    <g:set var="canManage" value="${true}"/>
+</sec:ifAllGranted>
 
 <!DOCTYPE html>
 <html>
@@ -64,17 +67,19 @@
                                         </div>
                                         <div class="col-lg-1">
                                             <g:if test="${canManage && i < classList.size()-1}">
-                                                <button class="btn btn-warning btn-xs move-to-bottom-btn" type="button" value="${raidMember.id}">
+                                                <g:link class="btn btn-warning btn-xs move-to-bottom-btn"
+                                                        controller="raidMember" action="moveToBottom"
+                                                        params="${[raid_member_id: raidMember.id]}">
                                                     <span class="glyphicon glyphicon-arrow-down"></span>
-
-                                                </button>
+                                                </g:link>
                                             </g:if>
                                         </div>
                                         <div class="col-lg-1">
                                             <g:if test="${canManage}">
-                                                <button class="btn btn-danger btn-xs">
+                                                <g:link class="btn btn-danger btn-xs" controller="raidMember" action="removeFromRaid"
+                                                        params="${[raid_member_id: raidMember.id]}">
                                                     <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
+                                                </g:link>
                                             </g:if>
                                         </div>
                                     </div>

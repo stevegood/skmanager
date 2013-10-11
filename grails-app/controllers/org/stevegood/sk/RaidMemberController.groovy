@@ -1,6 +1,7 @@
 package org.stevegood.sk
 
 import grails.converters.JSON
+import grails.plugin.springsecurity.SpringSecurityUtils
 import org.stevegood.sec.User
 
 import static org.springframework.http.HttpStatus.*
@@ -99,8 +100,9 @@ class RaidMemberController {
     def moveToBottom() {
         def raidMember = RaidMember.get(params.raid_member_id)
         def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
 
-        if (!(currentUser == raidMember?.raid?.owner || raidMember?.raid?.managers?.contains(currentUser))) {
+        if (!(currentUser == raidMember?.raid?.owner || raidMember?.raid?.managers?.contains(currentUser) || isAdmin)) {
             notFound()
             return
         }
@@ -116,8 +118,26 @@ class RaidMemberController {
         }
         raidMember.listPosition = classList.size()
         raidMember.save()
-        classList << raidMember
-        render classList as JSON
+
+        redirect controller: 'raid', action: 'show', id: raidMember.raid.id
+        return
+    }
+
+    def removeFromRaid() {
+        def raidMember = RaidMember.get(params.raid_member_id)
+        def raid = raidMember.raid
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!(currentUser == raidMember?.raid?.owner || raidMember?.raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
+        }
+
+        raidMember.delete(flush: true)
+
+        redirect controller: 'raid', action: 'show', id: raid.id
+        return
     }
 
     protected void notFound() {
