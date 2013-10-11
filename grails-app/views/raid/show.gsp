@@ -20,9 +20,9 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h2>
-                        <g:link controller="user" action="show" id="${raidInstance?.owner?.id}">
+                        %{--<g:link controller="user" action="show" id="${raidInstance?.owner?.id}">--}%
                             ${raidInstance?.owner?.username.capitalize()}'s
-                        </g:link>
+                        %{--</g:link>--}%
                         ${raidInstance.name}
                     </h2>
                 </div>
@@ -63,7 +63,9 @@
                                 <g:each in="${classList}" var="raidMember" status="i">
                                     <div class="row highlight-on-hover">
                                         <div class="col-lg-8">
-                                            <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">${raidMember.character.name}</g:link>
+                                            %{--<g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">--}%
+                                                ${raidMember.character.name}
+                                            %{--</g:link>--}%
                                         </div>
                                         <div class="col-lg-1">
                                             <g:if test="${canManage && i < classList.size()-1}">
