@@ -12,15 +12,15 @@ class UserController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond User.list(params), model:[userInstanceCount: User.count()]
+        [userInstanceList: User.list(params), userInstanceCount: User.count()]
     }
 
     def show(User userInstance) {
-        respond userInstance
+        [userInstance: userInstance]
     }
 
     def create() {
-        respond new User(params)
+        [userInstance: new User(params)]
     }
 
     @Transactional
@@ -31,23 +31,18 @@ class UserController {
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'create'
+            render view:'create', model: [userInstance: userInstance]
             return
         }
 
         userInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'userInstance.label', default: 'User'), userInstance.id])
-                redirect userInstance
-            }
-            '*' { respond userInstance, [status: CREATED] }
-        }
+        flash.message = message(code: 'default.created.message', args: [message(code: 'userInstance.label', default: 'User'), userInstance.id])
+        redirect userInstance
     }
 
     def register() {
-        respond new User(params)
+        [userInstance: new User(params)]
     }
 
     @Transactional
@@ -56,28 +51,23 @@ class UserController {
 
         if (params.password != params.password2) {
             flash.message = message(code: 'passwords.dont.match', default: 'Passwords don\'t match.')
-            respond userInstance.errors, view: 'register'
+            render view: 'register', model: [userInstance: userInstance]
             return
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'register'
+            render view:'register', model: [userInstance: userInstance]
             return
         }
 
         userInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'userInstance.label', default: 'User'), userInstance.id])
-                redirect controller: 'login', action: 'auth', params: [username: userInstance.username]
-            }
-            '*' { respond userInstance, [status: CREATED] }
-        }
+        flash.message = "$userInstance.username has been registered!"
+        redirect controller: 'login', action: 'auth', params: [username: userInstance.username]
     }
 
     def edit(User userInstance) {
-        respond userInstance
+        [userInstance: userInstance]
     }
 
     @Transactional
@@ -88,19 +78,14 @@ class UserController {
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'edit'
+            render view:'edit', model: [userInstance: userInstance]
             return
         }
 
         userInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect userInstance
-            }
-            '*'{ respond userInstance, [status: OK] }
-        }
+        flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
+        redirect userInstance
     }
 
     @Transactional
@@ -113,22 +98,12 @@ class UserController {
 
         userInstance.delete flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
+        redirect action:"index", method:"GET"
     }
 
     protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'userInstance.label', default: 'User'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'userInstance.label', default: 'User'), params.id])
+        redirect action: "index", method: "GET"
     }
 }
