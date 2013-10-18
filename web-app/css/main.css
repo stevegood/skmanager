@@ -14,3 +14,11 @@ body {
 .highlight-on-hover:hover {
     background-color: #f5f5f5;
 }
+
+span.small {
+    font-size: 40%;
+}
+
+.middle {
+    vertical-align: middle;
+}

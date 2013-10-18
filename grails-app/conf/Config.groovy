@@ -64,7 +64,7 @@ grails {
         }
     }
 }
- 
+
 grails.converters.encoding = "UTF-8"
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
@@ -133,6 +133,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/user/register':                 ['permitAll'],
 	'/user/saveRegistration':         ['permitAll'],
     '/admin/**':                      ['ROLE_ADMIN'],
-    '/**':                            ['IS_AUTHENTICATED_FULLY']
+    '/**':                            ['IS_AUTHENTICATED_FULLY'],
+    '/raid/show/**':                  ['permitAll']
 ]
 

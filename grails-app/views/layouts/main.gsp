@@ -12,7 +12,7 @@
 		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
 		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-        <r:require modules="main" />
+        <r:require modules="bootstrap_js,main" />
 		<g:layoutHead/>
 		<r:layoutResources />
 	</head>
@@ -48,13 +48,17 @@
                         </sec:ifAllGranted>
                     </sec:ifLoggedIn>
                 </ul>
-                <sec:ifLoggedIn>
-                    <ul class="nav navbar-nav pull-right">
-                        <li>
+
+                <ul class="nav navbar-nav pull-right">
+                    <li>
+                        <sec:ifLoggedIn>
                             <g:link controller="logout" action="index">Logout</g:link>
-                        </li>
-                    </ul>
-                </sec:ifLoggedIn>
+                        </sec:ifLoggedIn>
+                        <sec:ifNotLoggedIn>
+                            <g:link controller="login" action="auth">Log In</g:link>
+                        </sec:ifNotLoggedIn>
+                    </li>
+                </ul>
             </div>
         </div>
         </div>

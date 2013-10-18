@@ -27,7 +27,7 @@
                             <g:render template="form"/>
 
                             <div class="form-group">
-                                <div class="col-lg-offset-4 col-lg-8">
+                                <div class="col-lg-offset-3 col-lg-9">
                                     <g:submitButton name="create" class="btn btn-primary" value="${message(code: 'default.button.create.label', default: 'Create')}" />
                                 </div>
                             </div>

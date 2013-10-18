@@ -6,15 +6,9 @@
 
 <body>
 
-<div class="page-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-lg-offset-4">
-                <h1>Login</h1>
-            </div>
-        </div>
-    </div>
-</div>
+<skm:pageHeader class="col-lg-4 col-lg-offset-4">
+    <h1>Login</h1>
+</skm:pageHeader>
 
 <div id="login-panel" class="container">
     <div class="row">

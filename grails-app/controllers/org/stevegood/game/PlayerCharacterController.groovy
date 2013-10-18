@@ -10,19 +10,17 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class PlayerCharacterController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond PlayerCharacter.list(params), model:[playerCharacterInstanceCount: PlayerCharacter.count()]
+        [playerCharacterInstanceList: PlayerCharacter.list(params), playerCharacterInstanceCount: PlayerCharacter.count()]
     }
 
     def show(PlayerCharacter playerCharacterInstance) {
-        respond playerCharacterInstance
+        [playerCharacterInstance: playerCharacterInstance]
     }
 
     def create() {
-        respond new PlayerCharacter(params)
+        [playerCharacterInstance: new PlayerCharacter(params)]
     }
 
     @Transactional
@@ -33,23 +31,18 @@ class PlayerCharacterController {
         }
 
         if (playerCharacterInstance.hasErrors()) {
-            respond playerCharacterInstance.errors, view:'create'
+            render view:'create', model: [playerCharacterInstance: playerCharacterInstance]
             return
         }
 
         playerCharacterInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'playerCharacterInstance.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
-                redirect playerCharacterInstance
-            }
-            '*' { respond playerCharacterInstance, [status: CREATED] }
-        }
+        flash.message = message(code: 'default.created.message', args: [message(code: 'playerCharacterInstance.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
+        redirect playerCharacterInstance
     }
 
     def edit(PlayerCharacter playerCharacterInstance) {
-        respond playerCharacterInstance
+        [playerCharacterInstance: playerCharacterInstance]
     }
 
     @Transactional
@@ -60,19 +53,14 @@ class PlayerCharacterController {
         }
 
         if (playerCharacterInstance.hasErrors()) {
-            respond playerCharacterInstance.errors, view:'edit'
+            render view:'edit', model: [playerCharacterInstance: playerCharacterInstance]
             return
         }
 
         playerCharacterInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'PlayerCharacter.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
-                redirect playerCharacterInstance
-            }
-            '*'{ respond playerCharacterInstance, [status: OK] }
-        }
+        flash.message = message(code: 'default.updated.message', args: [message(code: 'PlayerCharacter.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
+        redirect playerCharacterInstance
     }
 
     @Transactional
@@ -85,13 +73,8 @@ class PlayerCharacterController {
 
         playerCharacterInstance.delete flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'PlayerCharacter.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'PlayerCharacter.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
+        redirect action:"index", method:"GET"
     }
 
     def availableForRaid() {
@@ -106,12 +89,7 @@ class PlayerCharacterController {
     }
 
     protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'playerCharacterInstance.label', default: 'PlayerCharacter'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'playerCharacterInstance.label', default: 'PlayerCharacter'), params.id])
+        redirect action: "index", method: "GET"
     }
 }
