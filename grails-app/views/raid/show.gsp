@@ -62,9 +62,9 @@
                                 <g:each in="${classList}" var="raidMember" status="i">
                                     <div class="row highlight-on-hover">
                                         <div class="col-lg-8">
-                                            %{--<g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">--}%
+                                            <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">
                                                 ${raidMember.character.name}
-                                            %{--</g:link>--}%
+                                            </g:link>
                                         </div>
                                         <div class="col-lg-1">
                                             <g:if test="${canManage && i < classList.size()-1}">
