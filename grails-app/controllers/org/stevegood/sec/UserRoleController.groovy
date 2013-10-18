@@ -31,19 +31,14 @@ class UserRoleController {
         }
 
         if (userRoleInstance.hasErrors()) {
-            respond userRoleInstance.errors, view:'create'
+            render view:'create', model: [userRoleInstance: userRoleInstance]
             return
         }
 
         userRoleInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'userRoleInstance.label', default: 'UserRole'), userRoleInstance.id])
-                redirect userRoleInstance
-            }
-            '*' { respond userRoleInstance, [status: CREATED] }
-        }
+        flash.message = message(code: 'default.created.message', args: [message(code: 'userRoleInstance.label', default: 'UserRole'), userRoleInstance.id])
+        redirect action: 'index'
     }
 
     def edit(UserRole userRoleInstance) {
