@@ -11,6 +11,7 @@ class UrlMappings {
         "/login"(controller: 'login', action: 'auth')
         "/register"(controller: 'user', action: 'register')
         "/register/submit"(controller: 'user', action: 'saveRegistration')
+        "/raids/$action?/$id?"(controller: 'raid')
         "500"(view:'/error')
 	}
 }
