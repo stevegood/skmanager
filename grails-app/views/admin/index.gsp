@@ -18,5 +18,130 @@
     <h1>Admin</h1>
 </skm:pageHeader>
 
+<div class="container">
+    <div class="row">
+        %{-- users --}%
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="user" action="index">Users</g:link>
+                        <span class="pull-right badge">${userCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    Recent Registrations
+                    <ul class="list-group">
+                        <g:each in="${recentUsers}">
+                            <li class="list-group-item">
+                                <g:link controller="user" action="show" id="${it.id}">
+                                    ${it.username}
+                                </g:link>
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        %{-- Classes --}%
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="characterClass" action="index">Classes</g:link>
+                        <span class="pull-right badge">${classCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <g:each in="${classesWithCharacterCount}">
+                            <li class="list-group-item">
+                                <span class="badge">${it.characterCount}</span>
+                                <g:link controller="characterClass" action="show" id="${it.characterClass.id}">
+                                    ${it.characterClass.name}
+                                </g:link>
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        %{-- roles --}%
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="gameRole" action="index">Roles</g:link>
+                        <span class="pull-right badge">${roleCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <g:each in="${rolesWithCaracterCount}">
+                            <li class="list-group-item">
+                                <span class="badge">${it.characterCount}</span>
+                                <g:link controller="gameRole" action="show" id="${it.role.id}">
+                                    ${it.role.name}
+                                </g:link>
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        %{-- User Roles --}%
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="userRole" action="index">User Roles</g:link>
+                        <span class="pull-right badge">${userRoleCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+
+        %{-- characters --}%
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="playerCharacter" action="index">Chracters</g:link>
+                        <span class="pull-right badge">${characterCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+
+        %{-- raids --}%
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="raid" action="index">Raids</g:link>
+                        <span class="pull-right badge">${raidCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>
