@@ -14,5 +14,9 @@
 </head>
 <body>
 
+<skm:pageHeader class="col-lg-12">
+    <h1>Admin</h1>
+</skm:pageHeader>
+
 </body>
 </html>
