@@ -1,8 +1,10 @@
 package org.stevegood.game
 
+import org.stevegood.sk.RaidMember
+
 class PlayerCharacter {
 
-    static transients = ['roles']
+    static transients = ['roles', 'raids']
 
     Date dateCreated
     Date lastUpdated
@@ -29,7 +31,11 @@ class PlayerCharacter {
     }
 
     List<GameRole> getRoles() {
-        CharacterRole.findAllByCharacter(this)?.collect { it.role } ?: []
+        if (this.id) {
+            return CharacterRole.findAllByCharacter(this)?.collect { it?.role } ?: []
+        } else {
+            return []
+        }
     }
     
     def addRole(GameRole role) {
@@ -37,6 +43,10 @@ class PlayerCharacter {
     }
     
     def removeRole(GameRole role) {
-        CharacterRole.findAllByCharacterAndRole(this, role)?.delete(flush: true)
+        CharacterRole.findByCharacterAndRole(this, role)?.delete()
+    }
+
+    def getRaids() {
+        RaidMember.findAllByCharacter(this)?.collect { it.raid }?.unique() ?: []
     }
 }

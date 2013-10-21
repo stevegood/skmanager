@@ -30,6 +30,17 @@
 	</div>
 </div>
 
+<div class="form-group">
+    <label class="col-lg-3 control-label" for="roles">
+        Roles
+        <span class="required-indicator">*</span>
+    </label>
+    <div class="col-lg-9">
+        <g:select name="roles" from="${roleInstanceList}" optionKey="id" value="${playerCharacterInstance?.roles}"
+                  multiple="multiple" class="form-control" required="required" />
+    </div>
+</div>
+
 <div class="form-group ${hasErrors(bean: playerCharacterInstance, field: 'note', 'error')} ">
 	<label for="note" class="col-lg-3 control-label">
 		<g:message code="playerCharacter.note.label" default="Note" />

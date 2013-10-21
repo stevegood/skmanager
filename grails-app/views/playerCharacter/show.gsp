@@ -26,19 +26,57 @@
         </h1>
     </skm:pageHeader>
 
-    <g:if test="${playerCharacterInstance.note?.size()}">
-        <skm:pageHeader class="col-lg-12">
-            <h3>Note</h3>
-        </skm:pageHeader>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    ${playerCharacterInstance.note?.encodeAsHTML()}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Roles</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <g:each in="${playerCharacterInstance.roles}" var="role">
+                                <li class="list-group-item">
+                                    ${role.name}
+                                </li>
+                            </g:each>
+                        </ul>
+                    </div>
                 </div>
             </div>
+
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Raids</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <g:each in="${playerCharacterInstance.raids}" var="raid">
+                                <li class="list-group-item">
+                                    <g:link controller="raid" action="show" id="${raid.id}">${raid.name}</g:link>
+                                </li>
+                            </g:each>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Note</h3>
+                    </div>
+                    <div class="panel-body">
+                        ${playerCharacterInstance.note?.encodeAsHTML()}
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </g:if>
+    </div>
+
 
 	</body>
 </html>

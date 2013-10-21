@@ -20,7 +20,7 @@ class PlayerCharacterController {
     }
 
     def create() {
-        [playerCharacterInstance: new PlayerCharacter(params)]
+        [playerCharacterInstance: new PlayerCharacter(params), roleInstanceList: GameRole.list()]
     }
 
     @Transactional
@@ -36,13 +36,16 @@ class PlayerCharacterController {
         }
 
         playerCharacterInstance.save flush:true
+        params?.roles?.each {
+            playerCharacterInstance.addRole(GameRole.get(it as long))
+        }
 
         flash.message = message(code: 'default.created.message', args: [message(code: 'playerCharacterInstance.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
         redirect playerCharacterInstance
     }
 
     def edit(PlayerCharacter playerCharacterInstance) {
-        [playerCharacterInstance: playerCharacterInstance]
+        [playerCharacterInstance: playerCharacterInstance, roleInstanceList: GameRole.list()]
     }
 
     @Transactional
@@ -58,6 +61,12 @@ class PlayerCharacterController {
         }
 
         playerCharacterInstance.save flush:true
+        playerCharacterInstance.roles?.each {
+            playerCharacterInstance.removeRole(it)
+        }
+        params?.roles?.each {
+            playerCharacterInstance.addRole(GameRole.get(it as long))
+        }
 
         flash.message = message(code: 'default.updated.message', args: [message(code: 'PlayerCharacter.label', default: 'PlayerCharacter'), playerCharacterInstance.id])
         redirect playerCharacterInstance
