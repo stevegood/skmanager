@@ -1,16 +1,23 @@
-<%@ page import="org.stevegood.sk.Raid" %>
-<!DOCTYPE html>
+<%--
+  Created by IntelliJ IDEA.
+  User: steve
+  Date: 10/21/13
+  Time: 11:58 AM
+  To change this template use File | Settings | File Templates.
+--%>
+
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta name="layout" content="main">
-    <title>Browse Raids</title>
+    <title>My Raids</title>
+    <meta name="layout" content="main" />
 </head>
 
 <body>
 
 <skm:pageHeader class="col-lg-12">
     <h1>
-        Browse Raids
+        My Raids
         <sec:ifLoggedIn>
             <span class="pull-right">
                 <g:link controller="raid" action="create" class="btn btn-primary">
@@ -28,10 +35,6 @@
                       model="${[raidInstanceList: raidInstanceList, raidInstanceCount: raidInstanceCount]}"/>
         </div>
     </div>
-</div>
-
-<div class="pagination">
-    <g:paginate total="${raidInstanceCount ?: 0}"/>
 </div>
 </body>
 </html>

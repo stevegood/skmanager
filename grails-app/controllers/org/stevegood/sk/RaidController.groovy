@@ -13,11 +13,17 @@ class RaidController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def raidService
     def springSecurityService
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Raid.list(params), model:[raidInstanceCount: Raid.count()]
+        [raidInstanceCount: Raid.count(), raidInstanceList: Raid.list(params)]
+    }
+
+    def mine(){
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username as String)
+        [raidInstanceList: raidService.myRaids(currentUser)]
     }
 
     def show(Raid raidInstance) {

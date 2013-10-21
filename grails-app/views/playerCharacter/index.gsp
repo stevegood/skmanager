@@ -13,7 +13,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>Characters</h1>
+                    <h1>
+                        Characters
+                        <sec:ifLoggedIn>
+                            <span class="pull-right">
+                                <g:link controller="playerCharacter" action="create" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </g:link>
+                            </span>
+                        </sec:ifLoggedIn>
+                    </h1>
                 </div>
             </div>
         </div>

@@ -35,11 +35,38 @@
                         <li>
                             <g:link controller="dashboard" action="index">Dashboard</g:link>
                         </li>
-                        <li>
-                            <g:link controller="raid" action="create">Create Raid</g:link>
+                        <li class="dropdown">
+                            <a id="raidsDD" class="dropdown-toggle" href="#" data-toggle="dropdown" role="button">
+                                Raids
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" aria-labeledby="raidsDD" role="menu">
+                                <li role="presentation">
+                                    <g:link controller="raid" action="mine">My Raids</g:link>
+                                </li>
+                                <li role="presentation">
+                                    <g:link controller="raid" action="index">Browse Raids</g:link>
+                                </li>
+                                <li class="divider" role="presentation"></li>
+                                <li role="presentation">
+                                    <g:link controller="raid" action="create">Create Raid</g:link>
+                                </li>
+                            </ul>
                         </li>
-                        <li>
-                            <g:link controller="playerCharacter" action="create">Create Character</g:link>
+                        <li class="dropdown">
+                            <a id="charactersDD" class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                                Characters
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" aria-labeledby="charactersDD" role="menu">
+                                <li role="presentation">
+                                    <g:link controller="playerCharacter" action="index">Browse Characters</g:link>
+                                </li>
+                                <li class="divider" role="presentation"></li>
+                                <li role="presentation">
+                                    <g:link controller="playerCharacter" action="create">Create Character</g:link>
+                                </li>
+                            </ul>
                         </li>
                         <sec:ifAllGranted roles="ROLE_ADMIN">
                             <li>
