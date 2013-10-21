@@ -2,6 +2,8 @@ package org.stevegood.sec
 
 class User {
 
+    static auditable = [ignore:['version','password']]
+
 	transient springSecurityService
 
 	String username

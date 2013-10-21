@@ -4,6 +4,7 @@ import org.stevegood.sk.RaidMember
 
 class PlayerCharacter {
 
+    static auditable = true
     static transients = ['roles', 'raids']
 
     Date dateCreated

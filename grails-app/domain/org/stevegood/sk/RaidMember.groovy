@@ -4,6 +4,8 @@ import org.stevegood.game.PlayerCharacter
 
 class RaidMember {
 
+    static auditable = true
+
     Date dateCreated
     Date lastUpdated
 

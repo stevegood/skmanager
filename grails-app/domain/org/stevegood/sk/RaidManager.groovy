@@ -4,6 +4,7 @@ import org.stevegood.sec.User
 
 class RaidManager {
 
+    static auditable = true
     Date dateCreated
     Date lastUpdated
 

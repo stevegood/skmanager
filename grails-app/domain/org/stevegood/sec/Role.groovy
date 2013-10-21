@@ -2,6 +2,8 @@ package org.stevegood.sec
 
 class Role {
 
+    static auditable = true
+
 	String authority
 
 	static mapping = {

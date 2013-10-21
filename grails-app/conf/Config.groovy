@@ -1,3 +1,5 @@
+import grails.plugin.springsecurity.SpringSecurityUtils
+
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -137,4 +139,18 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/**':                            ['IS_AUTHENTICATED_FULLY'],
     '/raid/show/**':                  ['permitAll']
 ]
+
+auditLog.verbose = true
+auditLog {
+    actorClosure = { request, session ->
+        if (request.applicationContext.springSecurityService.principal instanceof java.lang.String){
+            return request.applicationContext.springSecurityService.principal
+        }
+        def username = request.applicationContext.springSecurityService.principal?.username
+        if (SpringSecurityUtils.isSwitched()){
+            username = SpringSecurityUtils.switchedUserOriginalUsername+" AS "+username
+        }
+        return username
+    }
+}
 

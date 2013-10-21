@@ -2,6 +2,8 @@ package org.stevegood.game
 
 class CharacterRole {
 
+    static auditable = true
+
     GameRole role
     PlayerCharacter character
 

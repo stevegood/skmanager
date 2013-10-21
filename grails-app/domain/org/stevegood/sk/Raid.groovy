@@ -5,6 +5,7 @@ import org.stevegood.sec.User
 
 class Raid {
 
+    static auditable = true
     static transients = ['members', 'managers']
 
     Date dateCreated

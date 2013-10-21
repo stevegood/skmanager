@@ -2,6 +2,8 @@ package org.stevegood.game
 
 class CharacterClass {
 
+    static auditable = true
+
     String name
 
     static constraints = {
