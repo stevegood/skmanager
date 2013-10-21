@@ -101,11 +101,23 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <g:link controller="userRole" action="index">User Roles</g:link>
+
                         <span class="pull-right badge">${userRoleCount}</span>
+                        <g:link controller="userRole" action="create" class="pull-right">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </g:link>
+
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <ul class="list-group"></ul>
+                    <ul class="list-group">
+                        <g:each in="${userRolesWithUserCount}">
+                            <li class="list-group-item">
+                                <g:link controller="role" action="show" id="${it.role.id}">${it.role.authority}</g:link>
+                                <span class="pull-right badge">${it.userCount}</span>
+                            </li>
+                        </g:each>
+                    </ul>
                 </div>
             </div>
         </div>

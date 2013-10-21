@@ -1,8 +1,5 @@
 package org.stevegood.sec
 
-
-
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -12,15 +9,16 @@ class UserRoleController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond UserRole.list(params), model:[userRoleInstanceCount: UserRole.count()]
+        [userRoleInstanceCount: UserRole.count(), userRoleInstanceList: UserRole.list(params)]
     }
 
-    def show(UserRole userRoleInstance) {
-        respond userRoleInstance
+    def show() {
+        def userRoleInstance = UserRole.get(params.userid as long, params.roleid as long)
+        [userRoleInstance: userRoleInstance]
     }
 
     def create() {
-        respond new UserRole(params)
+        [userRoleInstance: new UserRole(params)]
     }
 
     @Transactional
@@ -41,35 +39,10 @@ class UserRoleController {
         redirect action: 'index'
     }
 
-    def edit(UserRole userRoleInstance) {
-        respond userRoleInstance
-    }
-
     @Transactional
-    def update(UserRole userRoleInstance) {
-        if (userRoleInstance == null) {
-            notFound()
-            return
-        }
+    def delete() {
 
-        if (userRoleInstance.hasErrors()) {
-            respond userRoleInstance.errors, view:'edit'
-            return
-        }
-
-        userRoleInstance.save flush:true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'UserRole.label', default: 'UserRole'), userRoleInstance.id])
-                redirect userRoleInstance
-            }
-            '*'{ respond userRoleInstance, [status: OK] }
-        }
-    }
-
-    @Transactional
-    def delete(UserRole userRoleInstance) {
+        def userRoleInstance = UserRole.get(params.userid as long, params.roleid as long)
 
         if (userRoleInstance == null) {
             notFound()
@@ -78,22 +51,12 @@ class UserRoleController {
 
         userRoleInstance.delete flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'UserRole.label', default: 'UserRole'), userRoleInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'UserRole.label', default: 'UserRole'), userRoleInstance.id])
+        redirect action:"index", method:"GET"
     }
 
     protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'userRoleInstance.label', default: 'UserRole'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'userRoleInstance.label', default: 'UserRole'), params.id])
+        redirect action: "index", method: "GET"
     }
 }

@@ -19,6 +19,10 @@ span.small {
     font-size: 40%;
 }
 
+span.medium {
+    font-size: 75%;
+}
+
 .middle {
     vertical-align: middle;
 }
