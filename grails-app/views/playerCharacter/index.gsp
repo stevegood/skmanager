@@ -55,9 +55,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="pagination">
-                    <g:paginate total="${playerCharacterInstanceCount ?: 0}" />
-                </div>
+
+                <bootstrap:paginate total="${playerCharacterInstanceCount ?: 0}" />
             </div>
         </div>
     </div>

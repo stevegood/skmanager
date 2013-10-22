@@ -1,8 +1,6 @@
 package org.stevegood.game
 
 
-
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -12,15 +10,15 @@ class CharacterRoleController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond CharacterRole.list(params), model:[characterRoleInstanceCount: CharacterRole.count()]
+        [characterRoleInstanceCount: CharacterRole.count(), characterRoleInstanceList: CharacterRole.list(params)]
     }
 
     def show(CharacterRole characterRoleInstance) {
-        respond characterRoleInstance
+        [characterRoleInstance: characterRoleInstance]
     }
 
     def create() {
-        respond new CharacterRole(params)
+        [characterRoleInstance: new CharacterRole(params)]
     }
 
     @Transactional
@@ -31,23 +29,18 @@ class CharacterRoleController {
         }
 
         if (characterRoleInstance.hasErrors()) {
-            respond characterRoleInstance.errors, view:'create'
+            render view:'create', model: [characterRoleInstance: characterRoleInstance]
             return
         }
 
         characterRoleInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'characterRoleInstance.label', default: 'CharacterRole'), characterRoleInstance.id])
-                redirect characterRoleInstance
-            }
-            '*' { respond characterRoleInstance, [status: CREATED] }
-        }
+        flash.message = "${characterRoleInstance.name} created!"
+        redirect characterRoleInstance
     }
 
     def edit(CharacterRole characterRoleInstance) {
-        respond characterRoleInstance
+        [characterRoleInstance: characterRoleInstance]
     }
 
     @Transactional
@@ -58,19 +51,14 @@ class CharacterRoleController {
         }
 
         if (characterRoleInstance.hasErrors()) {
-            respond characterRoleInstance.errors, view:'edit'
+            render view:'edit', model: [characterRoleInstance: characterRoleInstance]
             return
         }
 
         characterRoleInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'CharacterRole.label', default: 'CharacterRole'), characterRoleInstance.id])
-                redirect characterRoleInstance
-            }
-            '*'{ respond characterRoleInstance, [status: OK] }
-        }
+        flash.message = "${characterRoleInstance.name} updated!"
+        redirect characterRoleInstance
     }
 
     @Transactional
@@ -83,22 +71,12 @@ class CharacterRoleController {
 
         characterRoleInstance.delete flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'CharacterRole.label', default: 'CharacterRole'), characterRoleInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = "${characterRoleInstance.name} deleted!"
+        redirect action:"index", method:"GET"
     }
 
     protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'characterRoleInstance.label', default: 'CharacterRole'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'characterRoleInstance.label', default: 'CharacterRole'), params.id])
+        redirect action: "index", method: "GET"
     }
 }

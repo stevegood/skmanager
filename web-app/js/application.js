@@ -1,9 +1,7 @@
 if (typeof jQuery !== 'undefined') {
 	(function($) {
-		$('#spinner').ajaxStart(function() {
-			$(this).fadeIn();
-		}).ajaxStop(function() {
-			$(this).fadeOut();
-		});
+
+        $('[data-toggle=tooltip]').tooltip();
+
 	})(jQuery);
 }

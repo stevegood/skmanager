@@ -15,7 +15,14 @@
 <body>
 
 <skm:pageHeader class="col-lg-12">
-    <h1>Admin</h1>
+    <h1>
+        Admin
+        <span class="pull-right">
+            <g:link controller="playerCharacter" action="importCharacterData" class="btn btn-primary" data-toggle="tooltip" title="Import Character Data">
+                <span class="glyphicon glyphicon-import"></span>
+            </g:link>
+        </span>
+    </h1>
 </skm:pageHeader>
 
 <div class="container">
@@ -99,15 +106,21 @@
         <div class="col-lg-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">
-                        <g:link controller="userRole" action="index">User Roles</g:link>
-
-                        <span class="pull-right badge">${userRoleCount}</span>
-                        <g:link controller="userRole" action="create" class="pull-right">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </g:link>
-
-                    </h3>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <h3 class="panel-title">
+                                <g:link controller="userRole" action="index">User Roles</g:link>
+                            </h3>
+                        </div>
+                        <div class="col-lg-1">
+                            <g:link controller="userRole" action="create" class="btn btn-primary btn-xs">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </g:link>
+                        </div>
+                        <div class="col-lg-1">
+                            <span class="badge">${userRoleCount}</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="panel-body">
                     <ul class="list-group">

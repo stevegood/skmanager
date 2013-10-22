@@ -67,12 +67,6 @@
                     Already have an account? <g:link controller="login" action="auth">Login now.</g:link>
                 </div>
             </div>
-
-            <g:if test='${flash.message}'>
-                <div class='alert alert-danger'>
-                    ${flash.message}
-                </div>
-            </g:if>
         </div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 package org.stevegood.game
 
-class CharacterClass {
+class CharacterClass implements Serializable {
 
     static auditable = true
 

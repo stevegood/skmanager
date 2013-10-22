@@ -10,6 +10,8 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class PlayerCharacterController {
 
+    def riftService
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         [playerCharacterInstanceList: PlayerCharacter.list(params), playerCharacterInstanceCount: PlayerCharacter.count()]
@@ -92,9 +94,57 @@ class PlayerCharacterController {
             raid.members.each { RaidMember raidMember ->
                 ne 'id', raidMember.character.id
             }
+            order 'name', 'asc'
         }
-        def result = [playerCharacters: pcs]
+        def result = [playerCharacters: pcs*.toMap()]
         render result as JSON
+    }
+
+    def importCharacterData() {}
+
+    @Transactional
+    def saveImportCharacterdata() {
+        // TODO: import the data from uploaded file
+        def file = request.getFile('characterDataFile')
+        if (file.empty) {
+            flash.message = 'File cannot be empty'
+            render view: 'importCharacterData'
+            return
+        }
+
+        def ts = new Date().time.toString()
+        File tmpFile = File.createTempFile(ts, file.originalFilename as String)
+        file.transferTo(tmpFile)
+
+        def characterData
+        switch(params.game.toLowerCase()) {
+            case 'rift':
+                characterData = riftService.processGuildDump(tmpFile)
+        }
+
+        if (!characterData) {
+            flash.message = 'Either no data exists in the file supplied or it is from an unsupported game.  Please check your file and try again.'
+            render view: 'importCharacterData'
+            return
+        }
+
+        def charactersAdded = 0
+        def charactersIgnored = 0
+        characterData.each {
+            def pc = PlayerCharacter.findOrCreateByName(it.name)
+            if (!pc.id) {
+                pc.characterClass = CharacterClass.findOrCreateByName(it.characterClass).save(flush: true)
+                pc.level = it.level
+                pc.note = it.note
+                pc.save()
+                charactersAdded++
+            } else {
+                charactersIgnored++
+            }
+        }
+
+        flash.message = "$charactersAdded character(s) added and $charactersIgnored character(s) ignored"
+        redirect controller: 'admin', action: 'index'
     }
 
     protected void notFound() {

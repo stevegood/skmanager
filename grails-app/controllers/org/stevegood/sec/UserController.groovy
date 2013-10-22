@@ -45,10 +45,19 @@ class UserController {
 
     @Transactional
     def saveRegistration() {
-        def userInstance = new User(params)
+        def userInstance = User.findOrCreateByUsername(params.username)
+        userInstance.properties = params
+
+        if (userInstance.id) {
+            flash.message = message(code: 'user.exists', default: 'A user with that username already exists!')
+            flash.type = 'danger'
+            render view: 'register', model: [userInstance: userInstance]
+            return
+        }
 
         if (params.password != params.password2) {
             flash.message = message(code: 'passwords.dont.match', default: 'Passwords don\'t match.')
+            flash.type = 'danger'
             render view: 'register', model: [userInstance: userInstance]
             return
         }
@@ -102,6 +111,7 @@ class UserController {
 
     protected void notFound() {
         flash.message = message(code: 'default.not.found.message', args: [message(code: 'userInstance.label', default: 'User'), params.id])
+        flash.type = 'danger'
         redirect action: "index", method: "GET"
     }
 }

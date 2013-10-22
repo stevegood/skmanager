@@ -11,6 +11,7 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'raid.label', default: 'Raid')}" />
 		<title>${raidInstance?.owner?.username.capitalize()}'s ${raidInstance.name}</title>
+        <r:require module="typeahead" />
 	</head>
 	<body>
 
@@ -106,6 +107,13 @@
                 <div class="modal-body">
                     <form id="add-character-form" class="form form-horizontal" role="form">
                         <div class="form-group">
+                            <label class="col-lg-3 control-label" for="search">Search</label>
+                            <div class="col-lg-9">
+                                <input id="search" class="form-control" type="text"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-lg-3 control-label" for="add-character-select">Character *:</label>
                             <div class="col-lg-9">
                                 <select id="add-character-select" class="form-control" required="required"></select>
@@ -127,7 +135,7 @@
         </div>
     </div>
 
-    <r:script>
+    <r:script disposition="head">
     var skmanager = skmanager || {};
         skmanager.raid = {id: ${raidInstance.id}};
     </r:script>

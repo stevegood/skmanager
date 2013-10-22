@@ -36,11 +36,23 @@ jQuery(function($){
         $addCharacterSelect = $('#add-character-select'),
         $modalAddCharacterBtn = $('#modal-add-character-btn'),
         $addCharacterForm = $('#add-character-form'),
-        $addCharacterNote = $('#add-character-note');
+        $addCharacterNote = $('#add-character-note'),
+        $search = $('#search');
 
     $addCharacterBtn.on('click', function(){
         // todo: get the PCs
         $.getJSON('/playerCharacter/availableForRaid', {raid_id: skmanager.raid.id}, function(result){
+            // make $search a typeahead field
+            $search.typeahead({
+                name: 'characterSearch',
+                local: result.playerCharacters,
+                valueKey: 'name'
+            }).on('typeahead:selected', function(){
+                $addCharacterSelect.children('option').filter(function(){
+                    return ($(this).text() === $search.val());
+                }).prop('selected', true);
+                $addCharacterSelect.trigger('change');
+            });
             skmanager.buildModal(result.playerCharacters, $addCharacterModal, $addCharacterSelect, $addCharacterNote);
         });
     });

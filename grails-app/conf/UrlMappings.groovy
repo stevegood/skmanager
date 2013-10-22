@@ -12,6 +12,8 @@ class UrlMappings {
         "/register"(controller: 'user', action: 'register')
         "/register/submit"(controller: 'user', action: 'saveRegistration')
         "/raids/$action?/$id?"(controller: 'raid')
+        "/characters/$action?/$id?"(controller: 'playerCharacter')
+        "/characters/import"(controller: 'playerCharacter', action: 'importCharacterData')
         "500"(view:'/error')
 	}
 }

@@ -2,7 +2,7 @@ package org.stevegood.game
 
 import org.stevegood.sk.RaidMember
 
-class PlayerCharacter {
+class PlayerCharacter implements Serializable {
 
     static auditable = true
     static transients = ['roles', 'raids']
@@ -49,5 +49,20 @@ class PlayerCharacter {
 
     def getRaids() {
         RaidMember.findAllByCharacter(this)?.collect { it.raid }?.unique() ?: []
+    }
+
+    def toMap() {
+        [
+                id: id,
+                name: name,
+                dateCreated: dateCreated,
+                lastUpdated: lastUpdated,
+                note: note,
+                level: level,
+                characterClass: [
+                        id: characterClass.id,
+                        name: characterClass.name
+                ]
+        ]
     }
 }
