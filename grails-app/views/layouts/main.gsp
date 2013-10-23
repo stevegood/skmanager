@@ -10,7 +10,7 @@
 		<title><g:layoutTitle default="Grails"/></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
-        <r:require modules="bootstrap_js,application" />
+        <r:require modules="bootstrap_js,application,jqueryui" />
 		<g:layoutHead/>
 		<r:layoutResources />
 	</head>

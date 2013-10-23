@@ -59,6 +59,7 @@
                         <div class="panel-body">
                             <div class="container">
                                 %{-- list characters by class --}%
+                                %{-- TODO: make these lists sortable with jqueryui. example: http://jqueryui.com/sortable/#placeholder --}%
                                 <g:each in="${classMap.members}" var="raidMember" status="i">
                                     <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />
                                 </g:each>
