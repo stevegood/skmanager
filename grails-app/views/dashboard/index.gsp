@@ -46,24 +46,5 @@
     </div>
 </div>
 
-<sec:ifAllGranted roles="ROLE_ADMIN">
-%{-- TODO: remove controller links --}%
-    <hr>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="controller-list" role="navigation">
-                    <h2>Available Controllers:</h2>
-                    <ul>
-                        <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-                            <li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-                        </g:each>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</sec:ifAllGranted>
-
 </body>
 </html>

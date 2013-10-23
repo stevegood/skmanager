@@ -39,4 +39,8 @@ class RaidMember {
         raidMember.listPosition = characterClassCount
         raidMember.save(flush: true)
     }
+
+    String toString() {
+        "${character.name} :: ${raid.name}"
+    }
 }

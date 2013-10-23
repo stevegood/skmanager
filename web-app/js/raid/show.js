@@ -22,8 +22,8 @@ skmanager.buildModal = function(playerCharacters, $modal, $select, $note) {
     }
 };
 
-skmanager.addCharacterToRaid = function($select, $note, $modal) {
-    $.getJSON('/raid/addCharacter', {raid_id: skmanager.raid.id, pc_id: $select.val(), note: $note.val()}, function(result){
+skmanager.addCharacterToRaid = function($select, $note, $substitute, $modal) {
+    $.getJSON('/raid/addCharacter', {raid_id: skmanager.raid.id, pc_id: $select.val(), substitute: $substitute.is(':checked'), note: $note.val()}, function(result){
         // handle the result by reloading the page
         $modal.modal('hide');
         window.location = window.location;
@@ -37,7 +37,8 @@ jQuery(function($){
         $modalAddCharacterBtn = $('#modal-add-character-btn'),
         $addCharacterForm = $('#add-character-form'),
         $addCharacterNote = $('#add-character-note'),
-        $search = $('#search');
+        $search = $('#search'),
+        $substituteCheckBox = $('#substitute');
 
     $addCharacterBtn.on('click', function(){
         // todo: get the PCs
@@ -69,7 +70,7 @@ jQuery(function($){
         // prevent the form from submitting, we only want to process this through ajax
         e.preventDefault();
         if ($addCharacterSelect.val() > 0) {
-            skmanager.addCharacterToRaid($addCharacterSelect, $addCharacterNote, $addCharacterModal);
+            skmanager.addCharacterToRaid($addCharacterSelect, $addCharacterNote, $substituteCheckBox, $addCharacterModal);
         }
         return false;
     });

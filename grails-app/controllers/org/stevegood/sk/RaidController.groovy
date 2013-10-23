@@ -36,7 +36,19 @@ class RaidController {
         def characterClasses = CharacterClass.list()
         def colWidth = characterClasses.size() ? 12 / characterClasses.size() : 0
 
-        [raidInstance: raidInstance, characterClasses: characterClasses, colWidth: colWidth]
+        def raidMembersByClass = []
+        def raidMembers = raidInstance.members
+        characterClasses.each { CharacterClass _class ->
+            def classMap = [characterClass: _class, members: [], subs: []]
+            raidMembers.findAll { it.character.characterClass == _class }?.each { RaidMember raidMember ->
+                println "${raidMember.character.name} :: ${raidMember.substitute}"
+                classMap[raidMember.substitute ? 'subs' : 'members'] << raidMember
+            }
+            raidMembersByClass << classMap
+        }
+
+        println raidMembersByClass
+        [raidInstance: raidInstance, characterClasses: characterClasses, colWidth: colWidth, raidMembersByClass: raidMembersByClass]
     }
 
     def create() {
@@ -54,19 +66,15 @@ class RaidController {
         raidInstance.owner = currentUser
 
         if (raidInstance.hasErrors()) {
-            respond raidInstance.errors, view:'create'
+            flash.message = 'Please correct the errors below'
+            render view:'create', model: [raidInstance: raidInstance]
             return
         }
 
         raidInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'raidInstance.label', default: 'Raid'), raidInstance.id])
-                redirect raidInstance
-            }
-            '*' { respond raidInstance, [status: CREATED] }
-        }
+        flash.message = "${raidInstance.name} created!"
+        redirect raidInstance
     }
 
     def edit(Raid raidInstance) {
@@ -81,19 +89,15 @@ class RaidController {
         }
 
         if (raidInstance.hasErrors()) {
-            respond raidInstance.errors, view:'edit'
+            flash.message = 'Please correct the errors below'
+            render view:'create', model: [raidInstance: raidInstance]
             return
         }
 
         raidInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Raid.label', default: 'Raid'), raidInstance.id])
-                redirect raidInstance
-            }
-            '*'{ respond raidInstance, [status: OK] }
-        }
+        flash.message = "${raidInstance.name} updated!"
+        redirect raidInstance
     }
 
     @Transactional
@@ -108,31 +112,23 @@ class RaidController {
         raidInstance.members*.delete flush: true
         raidInstance.delete flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Raid.label', default: 'Raid'), raidInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = "${raidInstance.name} deleted!"
+        redirect action:"index", method:"GET"
     }
 
     @Transactional
     def addCharacter() {
+        println params
         def pc = PlayerCharacter.get(params.pc_id)
         def raid = Raid.get(params.raid_id)
         def raidMember = raid.addPlayerCharacter(pc)
         raidMember.note = params.note
+        raidMember.substitute = params?.boolean('substitute')
         render raidMember as JSON
     }
 
     protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'raidInstance.label', default: 'Raid'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'raidInstance.label', default: 'Raid'), params.id])
+        redirect action: "index", method: "GET"
     }
 }

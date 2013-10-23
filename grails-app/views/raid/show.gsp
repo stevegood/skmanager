@@ -50,46 +50,26 @@
 
     <div class="container">
         <div class="row">
-            <g:each in="${characterClasses}" var="charClass">
+            <g:each in="${raidMembersByClass}" var="classMap">
                 <div class="col-lg-${colWidth}">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">${charClass.name}</h3>
+                            <h3 class="panel-title">${classMap.characterClass.name}</h3>
                         </div>
                         <div class="panel-body">
                             <div class="container">
-                                %{-- TODO: list characters by class --}%
-                                <g:set var="classList" value="${raidInstance.members.findAll { it.character.characterClass == charClass }.sort{ it.listPosition }}" />
-                                <g:each in="${classList}" var="raidMember" status="i">
-                                    <div class="row highlight-on-hover">
-                                        <div class="col-lg-8">
-                                            <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">
-                                                ${raidMember.character.name}
-                                            </g:link>
-                                        </div>
-                                        <div class="col-lg-1">
-                                            <g:if test="${canManage && i < classList.size()-1}">
-                                                <g:link class="btn btn-warning btn-xs move-to-bottom-btn"
-                                                        controller="raidMember" action="moveToBottom"
-                                                        params="${[raid_member_id: raidMember.id]}">
-                                                    <span class="glyphicon glyphicon-arrow-down"></span>
-                                                </g:link>
-                                            </g:if>
-                                        </div>
-                                        <div class="col-lg-1">
-                                            <g:if test="${canManage}">
-                                                <g:link class="btn btn-danger btn-xs" controller="raidMember" action="removeFromRaid"
-                                                        params="${[raid_member_id: raidMember.id]}">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </g:link>
-                                            </g:if>
-                                        </div>
-                                    </div>
+                                %{-- list characters by class --}%
+                                <g:each in="${classMap.members}" var="raidMember" status="i">
+                                    <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />
                                 </g:each>
+
+                                <g:if test="${classMap.subs.size()}">
+                                    <hr>
+                                    <g:each in="${classMap.subs}" var="raidMember" status="i">
+                                        <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.subs.size()-1]}" />
+                                    </g:each>
+                                </g:if>
                             </div>
-                        </div>
-                        <div class="panel-footer text-muted">
-                            ${classList.size()} ${charClass.name}<g:if test="${classList.size() > 1 || classList.size() == 0}">s</g:if>
                         </div>
                     </div>
                 </div>
@@ -121,6 +101,16 @@
                         </div>
 
                         <div class="form-group">
+                            <div class="col-lg-offset-3 col-lg-9">
+                                <div class="checkbox">
+                                    <label>
+                                        <g:checkBox name="substitute" /> Substitute
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-lg-3 control-label" for="add-character-note">Note:</label>
                             <div class="col-lg-9">
                                 <textarea class="form-control" id="add-character-note" rows="3"></textarea>
@@ -139,7 +129,7 @@
     var skmanager = skmanager || {};
         skmanager.raid = {id: ${raidInstance.id}};
     </r:script>
-    <g:javascript src="raid/show.js" />
+    <script type="text/javascript" src="${resource(dir: 'js/raid', file: 'show.js')}"></script>
 
 	</body>
 </html>
