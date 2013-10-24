@@ -1,5 +1,10 @@
 <div id="${raidMember.id}" class="row highlight-on-hover" data-raid-member-id="${raidMember.id}">
-    <div class="col-lg-8">
+    <g:if test="${sortable}">
+        <div class="col-lg-1" style="cursor: move;">
+            <span class="glyphicon glyphicon-sort text-muted"></span>
+        </div>
+    </g:if>
+    <div class="col-lg-${sortable ? '7' : '8'}">
         <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">
             ${raidMember.character.name}
         </g:link>

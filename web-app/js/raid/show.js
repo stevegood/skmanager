@@ -38,7 +38,11 @@ jQuery(function($){
         $addCharacterForm = $('#add-character-form'),
         $addCharacterNote = $('#add-character-note'),
         $search = $('#search'),
-        $substituteCheckBox = $('#substitute');
+        $substituteCheckBox = $('#substitute'),
+        $lists = $('#lists'),
+        $progressBar = $('#progress-bar');
+
+    $progressBar.hide();
 
     $addCharacterBtn.on('click', function(){
         // todo: get the PCs
@@ -84,11 +88,13 @@ jQuery(function($){
         $this.sortable({
             placeholder: "ui-state-highlight",
             stop: function(event, ui) {
-                var item_ids = $this.sortable('toArray').join();
-                $.getJSON('/raidMember/repositionMembers', {raid_member_ids: item_ids, raid_id: skmanager.raid.id}, function(result){
-                    window.location = window.location
-                });
+                var item_ids = $this.sortable('toArray');
+                if (item_ids.length) {
+                    $.getJSON('/raidMember/repositionMembers', {raid_member_ids: item_ids.join(), raid_id: skmanager.raid.id}, function(result){
+                        window.location = window.location
+                    });
+                }
             }
         });
-    })
+    });
 });

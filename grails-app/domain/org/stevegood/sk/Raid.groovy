@@ -6,7 +6,7 @@ import org.stevegood.sec.User
 class Raid {
 
     static auditable = true
-    static transients = ['members', 'managers']
+    static transients = ['members', 'managers', 'memberCount', 'substituteCount']
 
     Date dateCreated
     Date lastUpdated
@@ -60,5 +60,13 @@ class Raid {
 
     static List<Raid> findAllByMember(PlayerCharacter character) {
         RaidMember.findAllByCharacter(character)?.collect { it.raid } ?: []
+    }
+
+    int getMemberCount(){
+        RaidMember.countByRaidAndSubstitute(this, false)
+    }
+
+    int getSubstituteCount() {
+        RaidMember.countByRaidAndSubstitute(this, true)
     }
 }

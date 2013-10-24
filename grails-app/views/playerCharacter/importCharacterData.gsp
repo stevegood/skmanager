@@ -57,5 +57,13 @@
     </div>
 </div>
 
+<r:script>
+    (function($){
+        $('form').on('submit',function(e){
+            $.blockUI();
+        });
+    })(jQuery);
+</r:script>
+
 </body>
 </html>

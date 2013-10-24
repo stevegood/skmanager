@@ -1,5 +1,6 @@
 modules = {
     application {
+        dependsOn 'blockui'
         resource url: 'css/bootstrap-cosmo.min.css'
         resource url: 'css/main.css'
         resource url: 'js/application.js'
@@ -12,6 +13,11 @@ modules = {
             "<!--[if lt IE 9]>$s<![endif]-->"
         }
         resource url: 'js/jquery-ui-1.10.3.custom.min.js', disposition: 'head'
+    }
+
+    blockui {
+        dependsOn 'jquery'
+        resource url: 'js/jquery/jquery.blockui.js'
     }
 
     bootstrap_js {
