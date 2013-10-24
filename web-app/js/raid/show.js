@@ -78,4 +78,17 @@ jQuery(function($){
     $modalAddCharacterBtn.on('click', function(){
         $addCharacterForm.submit();
     });
+
+    $('.sortable').each(function(){
+        var $this = $(this);
+        $this.sortable({
+            placeholder: "ui-state-highlight",
+            stop: function(event, ui) {
+                var item_ids = $this.sortable('toArray').join();
+                $.getJSON('/raidMember/repositionMembers', {raid_member_ids: item_ids, raid_id: skmanager.raid.id}, function(result){
+                    window.location = window.location
+                });
+            }
+        });
+    })
 });

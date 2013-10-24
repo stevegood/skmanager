@@ -60,17 +60,26 @@
                             <div class="container">
                                 %{-- list characters by class --}%
                                 %{-- TODO: make these lists sortable with jqueryui. example: http://jqueryui.com/sortable/#placeholder --}%
-                                <g:each in="${classMap.members}" var="raidMember" status="i">
-                                    <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />
-                                </g:each>
+                                <div id="${classMap.characterClass.name}-members" class="${canManage ? 'sortable' : ''}">
+                                    <g:each in="${classMap.members}" var="raidMember" status="i">
+                                        <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />
+                                    </g:each>
+                                </div>
 
                                 <g:if test="${classMap.subs.size()}">
                                     <hr>
-                                    <g:each in="${classMap.subs}" var="raidMember" status="i">
-                                        <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.subs.size()-1]}" />
-                                    </g:each>
+                                    <div id="${classMap.characterClass.name}-subs">
+                                        <g:each in="${classMap.subs}" var="raidMember" status="i">
+                                            <g:render template="raidMember" model="${[canManage: canManage, raidMember: raidMember, last: i < classMap.subs.size()-1]}" />
+                                        </g:each>
+                                    </div>
                                 </g:if>
                             </div>
+                        </div>
+                        <div class="panel-footer">
+                            <g:set var="membersPlural" value="${classMap.members.size() == 0 || classMap.members.size() > 1}" />
+                            <g:set var="subsPlural" value="${classMap.subs.size() == 0 || classMap.subs.size() > 1}" />
+                            ${classMap.members.size()} member${membersPlural ? 's' : ''}, ${classMap.subs.size()} sub${subsPlural ? 's' : ''}
                         </div>
                     </div>
                 </div>

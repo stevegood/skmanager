@@ -1,4 +1,4 @@
-<div class="row highlight-on-hover">
+<div id="${raidMember.id}" class="row highlight-on-hover" data-raid-member-id="${raidMember.id}">
     <div class="col-lg-8">
         <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}">
             ${raidMember.character.name}

@@ -16,15 +16,15 @@ class RaidMemberController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond RaidMember.list(params), model:[raidMemberInstanceCount: RaidMember.count()]
+        [raidMemberInstanceCount: RaidMember.count(), raidMemberInstanceList: RaidMember.list(params)]
     }
 
     def show(RaidMember raidMemberInstance) {
-        respond raidMemberInstance
+        [raidMemberInstance: raidMemberInstance]
     }
 
     def create() {
-        respond new RaidMember(params)
+        [raidMemberInstance: new RaidMember(params)]
     }
 
     @Transactional
@@ -129,7 +129,7 @@ class RaidMemberController {
         def currentUser = User.findByUsername(springSecurityService.currentUser.username)
         def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
 
-        if (!(currentUser == raidMember?.raid?.owner || raidMember?.raid?.managers?.contains(currentUser) || isAdmin)) {
+        if (!(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
             notFound()
             return
         }
@@ -137,6 +137,29 @@ class RaidMemberController {
         raidMember.delete(flush: true)
 
         redirect controller: 'raid', action: 'show', id: raid.id
+        return
+    }
+
+    def repositionMembers() {
+        println params
+        def raid = Raid.get(params.getInt('raid_id'))
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!raid || !(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
+        }
+
+        def ids = params.raid_member_ids.split(',')
+        def result = [ids: []]
+        ids.eachWithIndex { id, i ->
+            def raidMember = RaidMember.get(id as long)
+            raidMember?.listPosition = i
+            raidMember?.save()
+            result.ids << raidMember?.id
+        }
+        render result as JSON
         return
     }
 
