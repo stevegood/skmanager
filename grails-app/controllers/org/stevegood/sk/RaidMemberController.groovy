@@ -12,6 +12,7 @@ class RaidMemberController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def raidService
     def springSecurityService
 
     def index(Integer max) {
@@ -141,7 +142,6 @@ class RaidMemberController {
     }
 
     def repositionMembers() {
-        println params
         def raid = Raid.get(params.getInt('raid_id'))
         def currentUser = User.findByUsername(springSecurityService.currentUser.username)
         def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
@@ -152,24 +152,58 @@ class RaidMemberController {
         }
 
         def ids = params.raid_member_ids.split(',')
-        def result = [ids: []]
-        ids.eachWithIndex { id, i ->
-            def raidMember = RaidMember.get(id as long)
-            raidMember?.listPosition = i
-            raidMember?.save()
-            result.ids << raidMember?.id
-        }
+        println ids
+        def result = [ids: raidService.repositionById(ids).collect { it.id }]
         render result as JSON
         return
     }
 
-    protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'raidMemberInstance.label', default: 'RaidMember'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
+    def makeSubstitute() {
+        def raidMember = RaidMember.get(params.raid_member_id)
+        def raid = raidMember?.raid
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!raid || !(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
         }
+
+        raidMember.substitute = true
+        raidMember.listPosition = raidMember.raid.substituteCount
+        raidMember.save(flush: true)
+
+        raidService.compressMembers(raid)
+
+        flash.message = "${raidMember.character.name} has been moved to the substitute list"
+
+        redirect controller: 'raid', action: 'show', id: raid.id
+        return
+    }
+
+    def makeCore() {
+        def raidMember = RaidMember.get(params.raid_member_id)
+        def raid = raidMember?.raid
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!raid || !(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
+        }
+
+        raidMember.substitute = false
+        raidMember.listPosition = raidMember.raid.memberCount
+        raidMember.save(flush: true)
+
+        flash.message = "${raidMember.character.name} has been moved to the core list"
+
+        redirect controller: 'raid', action: 'show', id: raid.id
+        return
+    }
+
+    protected void notFound() {
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'raidMemberInstance.label', default: 'RaidMember'), params.id])
+        redirect action: "index", method: "GET"
     }
 }
