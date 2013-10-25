@@ -202,6 +202,76 @@ class RaidMemberController {
         return
     }
 
+    def makeSubTempActive() {
+        def raidMember = RaidMember.get(params.raid_member_id)
+        def raid = raidMember?.raid
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!raid || !(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
+        }
+
+        def listSize = raid.members.findAll { it.character.characterClass == raidMember.character.characterClass && !it.substitute }.size()
+        raidMember.listPosition = listSize
+        raidMember.tempActive = true
+        raidMember.save(flush: true)
+
+        redirect controller: 'raid', action: 'show', id: raid.id
+        return
+    }
+
+    def removeTempActiveSub() {
+        // TODO: make sub tempActive = false
+
+        def raidMember = RaidMember.get(params.raid_member_id)
+        def raid = raidMember?.raid
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!raid || !(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
+        }
+
+        def subs = RaidMember.withCriteria {
+            eq 'raid', raid
+            eq 'substitute', true
+            or {
+                isNull 'tempActive'
+                eq 'tempActive', false
+            }
+            character {
+                eq 'characterClass', raidMember.character.characterClass
+            }
+        }
+        raidMember.tempActive = false
+        raidMember.save(flush: true)
+
+        def ids = subs.collect { it.id } + raidMember.id
+        raidService.repositionById(ids)
+
+        redirect controller: 'raid', action: 'show', id: raid.id
+        return
+    }
+
+    def deactivateAllTempActive() {
+        def raid = Raid.get(params.getInt('id'))
+        def currentUser = User.findByUsername(springSecurityService.currentUser.username)
+        def isAdmin = SpringSecurityUtils.ifAllGranted('ROLE_ADMIN')
+
+        if (!raid || !(currentUser == raid?.owner || raid?.managers?.contains(currentUser) || isAdmin)) {
+            notFound()
+            return
+        }
+
+        raidService.clearTempActiveSubs(raid)
+
+        redirect controller: 'raid', action: 'show', id: raid.id
+        return
+    }
+
     protected void notFound() {
         flash.message = message(code: 'default.not.found.message', args: [message(code: 'raidMemberInstance.label', default: 'RaidMember'), params.id])
         redirect action: "index", method: "GET"

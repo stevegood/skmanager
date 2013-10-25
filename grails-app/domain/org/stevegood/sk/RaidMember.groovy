@@ -13,6 +13,7 @@ class RaidMember {
     PlayerCharacter character
     boolean substitute = false
     boolean onLeave = false
+    boolean tempActive = false
     int listPosition
     String note
 
@@ -20,6 +21,7 @@ class RaidMember {
         note nullable: true, blank: true
         raid unique: ['character']
         listPosition nullable: false
+        tempActive nullable: true
     }
 
     static mapping = {

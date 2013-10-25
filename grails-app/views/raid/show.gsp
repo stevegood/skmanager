@@ -29,18 +29,37 @@
                 <div class="col-lg-4 btns">
                     <sec:ifLoggedIn>
                         <g:if test="${canManage}">
-                            <g:form url="[resource:raidInstance, action:'delete']" method="DELETE" class="pull-right">
+                            <div class="pull-right">
+
                                 <button id="add-character-btn" type="button" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-plus"></span>
                                     <span class="glyphicon glyphicon-user"></span>
                                 </button>
-                                <g:link class="btn btn-info" action="edit" resource="${raidInstance}">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </g:link>
-                                <button type="submit" name="_action_delete" class="btn btn-danger" onclick="return confirm('Are you sure?');">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </g:form>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <g:link controller="raidMember" action="deactivateAllTempActive" id="${raidInstance.id}">
+                                                <span class="glyphicon glyphicon-circle-arrow-down"></span> Reset all subs
+                                            </g:link>
+                                        </li>
+                                        <li>
+                                            <g:link action="edit" resource="${raidInstance}">
+                                                <span class="glyphicon glyphicon-pencil"></span> Edit Raid
+                                            </g:link>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <g:link controller="raid" action="delete" id="${raidInstance.id}" onclick="return confirm('Are you sure?');">
+                                                <span class="glyphicon glyphicon-trash"></span> Delete Raid
+                                            </g:link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </g:if>
                     </sec:ifLoggedIn>
                 </div>
@@ -59,7 +78,6 @@
                         <div class="panel-body">
                             <div class="container">
                                 %{-- list characters by class --}%
-                                %{-- TODO: make these lists sortable with jqueryui. example: http://jqueryui.com/sortable/#placeholder --}%
                                 <div id="${classMap.characterClass.name}-members" class="${canManage ? 'sortable' : ''}">
                                     <g:each in="${classMap.members}" var="raidMember" status="i">
                                         <g:render template="raidMember" model="${[sortable: true, canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />
@@ -75,11 +93,6 @@
                                     </div>
                                 </g:if>
                             </div>
-                        </div>
-                        <div class="panel-footer">
-                            <g:set var="membersPlural" value="${classMap.members.size() == 0 || classMap.members.size() > 1}" />
-                            <g:set var="subsPlural" value="${classMap.subs.size() == 0 || classMap.subs.size() > 1}" />
-                            ${classMap.members.size()} member${membersPlural ? 's' : ''}, ${classMap.subs.size()} sub${subsPlural ? 's' : ''}
                         </div>
                     </div>
                 </div>

@@ -31,3 +31,7 @@ span.medium {
     height: 1.5em;
     line-height: 1.2em;
 }
+
+.sort-icon {
+    cursor: move;
+}

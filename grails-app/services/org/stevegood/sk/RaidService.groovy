@@ -1,6 +1,7 @@
 package org.stevegood.sk
 
 import grails.transaction.Transactional
+import org.stevegood.game.CharacterClass
 import org.stevegood.sec.User
 
 @Transactional
@@ -12,12 +13,24 @@ class RaidService {
 
     void compressMembers(Raid raid) {
         def i = 0
-        raid.members.sort { it.listPosition }.each { raidMember ->
-            if (!raidMember.substitute) {
+        def raidMembers = RaidMember.withCriteria {
+            eq 'raid', raid
+            or {
+                and {
+                    eq 'substitute', true
+                    eq 'tempActive', true
+                }
+                eq 'substitute', false
+            }
+        }
+
+        CharacterClass.list().each { charClass ->
+            raidMembers.findAll { it.character.characterClass == charClass }.sort { it.listPosition }.each { raidMember ->
                 raidMember?.listPosition = i
                 raidMember?.save(flush: true)
                 i++
             }
+            i = 0
         }
     }
 
@@ -30,5 +43,13 @@ class RaidService {
             members << member
         }
         return members
+    }
+
+    void clearTempActiveSubs(Raid raid) {
+        def activeSubs = RaidMember.findAllBySubstituteAndTempActiveAndRaid(true, true, raid)
+        activeSubs*.setTempActive(false)
+        activeSubs*.save(flush: true)
+
+        compressMembers(raid)
     }
 }

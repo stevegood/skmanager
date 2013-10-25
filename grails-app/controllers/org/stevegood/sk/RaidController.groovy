@@ -11,7 +11,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class RaidController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT"]
 
     def raidService
     def springSecurityService
@@ -42,7 +42,7 @@ class RaidController {
             def classMap = [characterClass: _class, members: [], subs: []]
             raidMembers.findAll { it.character.characterClass == _class }?.each { RaidMember raidMember ->
                 println "${raidMember.character.name} :: ${raidMember.substitute}"
-                classMap[raidMember.substitute ? 'subs' : 'members'] << raidMember
+                classMap[raidMember.substitute && !raidMember.tempActive ? 'subs' : 'members'] << raidMember
             }
             classMap.members = classMap.members.sort { RaidMember a, RaidMember b -> a.listPosition <=> b.listPosition }
             classMap.subs = classMap.subs.sort { RaidMember a, RaidMember b -> a.listPosition <=> b.listPosition }
