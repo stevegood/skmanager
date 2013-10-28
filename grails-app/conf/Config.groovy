@@ -4,14 +4,14 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
 
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
+grails.config.locations = [ "classpath:${appName}-config.properties",
+                             "classpath:${appName}-config.groovy",
+                             "file:${userHome}/.grails/${appName}-config.properties",
+                             "file:${userHome}/.grails/${appName}-config.groovy"]
 
-// if (System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
+if (System.properties["${appName}.config.location"]) {
+    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
+}
 
 grails.app.context='/'
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
@@ -156,3 +156,5 @@ auditLog {
     }
 }
 
+//grails.plugin.databasemigration.updateOnStartFileNames = ['changelog.groovy']
+//grails.plugin.databasemigration.updateOnStart = true
