@@ -16,7 +16,7 @@
         </g:link>
     </div>
     <div class="col-lg-1">
-        <g:if test="${canManage && last}">
+        <g:if test="${canManage && last && (!raidMember.substitute || (raidMember.substitute && raidMember.tempActive))}">
             <g:link class="btn btn-warning btn-xs move-to-bottom-btn"
                     controller="raidMember" action="moveToBottom"
                     params="${[raid_member_id: raidMember.id]}">
