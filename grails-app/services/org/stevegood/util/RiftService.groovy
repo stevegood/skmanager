@@ -6,7 +6,7 @@ import grails.transaction.Transactional
 class RiftService {
 
     def processGuildDump(File file) {
-        // TODO: process XML file
+        // process XML file
         log.debug 'Starting to process Guild Dump'
         def xmlSlurper = new XmlSlurper().parse(file)
         def members = []

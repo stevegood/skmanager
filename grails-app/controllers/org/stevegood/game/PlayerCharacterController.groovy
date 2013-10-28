@@ -10,6 +10,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class PlayerCharacterController {
 
+    def playerCharacterService
     def riftService
 
     def index(Integer max) {
@@ -128,22 +129,9 @@ class PlayerCharacterController {
             return
         }
 
-        def charactersAdded = 0
-        def charactersIgnored = 0
-        characterData.each {
-            def pc = PlayerCharacter.findOrCreateByName(it.name)
-            if (!pc.id) {
-                pc.characterClass = CharacterClass.findOrCreateByName(it.characterClass).save(flush: true)
-                pc.level = it.level
-                pc.note = it.note
-                pc.save()
-                charactersAdded++
-            } else {
-                charactersIgnored++
-            }
-        }
+        def processedData = playerCharacterService.processCharacterData(characterData)
 
-        flash.message = "$charactersAdded character(s) added and $charactersIgnored character(s) ignored"
+        flash.message = "${processedData.charactersAdded} character(s) added, ${processedData.charactersUpdated} character(s) updated and ${processedData.charactersIgnored} character(s) ignored"
         redirect controller: 'admin', action: 'index'
     }
 
