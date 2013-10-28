@@ -7,8 +7,12 @@ import org.stevegood.sec.User
 @Transactional
 class RaidService {
 
-    def myRaids(User user) {
+    def myOwnedRaids(User user) {
         Raid.findAllByOwner(user)
+    }
+
+    def myManagedRaids(User user) {
+        RaidManager.findAllByManager(user)?.collect { it.raid } ?: []
     }
 
     void compressMembers(Raid raid) {

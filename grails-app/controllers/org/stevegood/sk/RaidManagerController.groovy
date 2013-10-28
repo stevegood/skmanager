@@ -1,6 +1,6 @@
 package org.stevegood.sk
 
-
+import org.stevegood.sec.User
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -10,17 +10,27 @@ class RaidManagerController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def springSecurityService
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond RaidManager.list(params), model:[raidManagerInstanceCount: RaidManager.count()]
+        [raidManagerInstanceCount: RaidManager.count(), raidManagerInstanceList: RaidManager.list(params)]
     }
 
     def show(RaidManager raidManagerInstance) {
-        respond raidManagerInstance
+        [raidManagerInstance: raidManagerInstance]
     }
 
     def create() {
-        respond new RaidManager(params)
+        Raid raid = params.raid =  Raid.get(params.int('raid.id'))
+        def users = User.withCriteria {
+            ne 'id', raid.owner.id
+            raid.managers?.each {
+                ne 'id', it.id
+            }
+
+        }
+        [raidManagerInstance: new RaidManager(params), users: users]
     }
 
     @Transactional
@@ -31,19 +41,14 @@ class RaidManagerController {
         }
 
         if (raidManagerInstance.hasErrors()) {
-            respond raidManagerInstance.errors, view:'create'
+            render view:'create', model: [raidManagerInstance: raidManagerInstance]
             return
         }
 
         raidManagerInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'raidManagerInstance.label', default: 'RaidManager'), raidManagerInstance.id])
-                redirect raidManagerInstance
-            }
-            '*' { respond raidManagerInstance, [status: CREATED] }
-        }
+        flash.message = "${raidManagerInstance.manager.username} has been added as a manager to ${raidManagerInstance.raid.name}"
+        redirect controller: 'raid', action: 'show', id: raidManagerInstance.raid.id
     }
 
     def edit(RaidManager raidManagerInstance) {

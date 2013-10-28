@@ -33,16 +33,27 @@
                 </div>
                 <div class="panel-body">
                     %{-- show my raids --}%
-                    <ul class="list-group">
-                        <g:each in="${raidList}" var="raid">
-                            <li class="list-group-item">
-                                <g:link controller="raid" action="show" id="${raid.id}">${raid.name}</g:link>
-                                <span class="pull-right text-muted">
-                                    M <span class="badge">${raid.memberCount}</span>&nbsp; S <span class="badge">${raid.substituteCount}</span>
-                                </span>
-                            </li>
-                        </g:each>
-                    </ul>
+                    <g:if test="${ownedRaidList?.size()}">
+                        <h6>Owned</h6>
+                        <ul class="list-group">
+                            <g:each in="${ownedRaidList}" var="raid">
+                                <g:render template="raidListItem" model="${[raid: raid]}" />
+                            </g:each>
+                        </ul>
+                    </g:if>
+
+                    <g:if test="${managedRaidList?.size()}">
+                        <h6>Managing</h6>
+                        <ul class="list-group">
+                            <g:each in="${managedRaidList}" var="raid">
+                                <g:render template="raidListItem" model="${[raid: raid]}" />
+                            </g:each>
+                        </ul>
+                    </g:if>
+
+                    <g:if test="${!ownedRaidList?.size() && !managedRaidList?.size()}">
+                        <h6>No raids yet!</h6>
+                    </g:if>
                 </div>
             </div>
         </div>

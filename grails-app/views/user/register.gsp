@@ -15,13 +15,13 @@
 </head>
 <body>
 
-<skm:pageHeader class="col-lg-6 col-lg-offset-3">
-    <h1>Register New Account</h1>
+<skm:pageHeader class="col-lg-4 col-lg-offset-4">
+    <h1>Register</h1>
 </skm:pageHeader>
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-4 col-lg-offset-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Create an account</h3>

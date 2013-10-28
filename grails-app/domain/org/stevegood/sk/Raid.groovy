@@ -69,4 +69,8 @@ class Raid {
     int getSubstituteCount() {
         RaidMember.countByRaidAndSubstitute(this, true)
     }
+
+    boolean isManager(String username) {
+        (managers?.findAll { it?.username == username }?.size() ?: 0) > 0
+    }
 }

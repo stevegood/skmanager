@@ -1,6 +1,7 @@
 
 <%@ page import="org.stevegood.sk.Raid" %>
-<g:set var="canManage" value="${sec.loggedInUserInfo(field: 'username') == raidInstance.owner.username}"/>
+<g:set var="username" value="${sec.loggedInUserInfo(field: 'username')}" />
+<g:set var="canManage" value="${username == raidInstance.owner.username || raidInstance.isManager(username.toString())}"/>
 <sec:ifAllGranted roles="ROLE_ADMIN">
     <g:set var="canManage" value="${true}"/>
 </sec:ifAllGranted>
@@ -46,17 +47,24 @@
                                                 <span class="glyphicon glyphicon-circle-arrow-down"></span> Reset all subs
                                             </g:link>
                                         </li>
-                                        <li>
-                                            <g:link action="edit" resource="${raidInstance}">
-                                                <span class="glyphicon glyphicon-pencil"></span> Edit Raid
-                                            </g:link>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li>
-                                            <g:link controller="raid" action="delete" id="${raidInstance.id}" onclick="return confirm('Are you sure?');">
-                                                <span class="glyphicon glyphicon-trash"></span> Delete Raid
-                                            </g:link>
-                                        </li>
+                                        <g:if test="${sec.username() == raidInstance.owner.username}">
+                                            <li>
+                                                <g:link controller="raidManager" action="create" params="${['raid.id': raidInstance.id]}">
+                                                    <span class="glyphicon glyphicon-tower"></span> Add Manager
+                                                </g:link>
+                                            </li>
+                                            <li>
+                                                <g:link action="edit" resource="${raidInstance}">
+                                                    <span class="glyphicon glyphicon-pencil"></span> Edit Raid
+                                                </g:link>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li>
+                                                <g:link controller="raid" action="delete" id="${raidInstance.id}" onclick="return confirm('Are you sure?');">
+                                                    <span class="glyphicon glyphicon-trash"></span> Delete Raid
+                                                </g:link>
+                                            </li>
+                                        </g:if>
                                     </ul>
                                 </div>
                             </div>

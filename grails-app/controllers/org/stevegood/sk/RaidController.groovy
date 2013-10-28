@@ -4,8 +4,6 @@ import grails.converters.JSON
 import org.stevegood.game.CharacterClass
 import org.stevegood.game.PlayerCharacter
 import org.stevegood.sec.User
-
-import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -23,7 +21,7 @@ class RaidController {
 
     def mine(){
         def currentUser = User.findByUsername(springSecurityService.currentUser.username as String)
-        [raidInstanceList: raidService.myRaids(currentUser)]
+        [raidInstanceList: raidService.myOwnedRaids(currentUser)]
     }
 
     def show(Raid raidInstance) {
