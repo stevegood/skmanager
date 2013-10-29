@@ -7,12 +7,84 @@ import org.stevegood.game.GameRole
 import org.stevegood.game.PlayerCharacter
 import org.stevegood.sec.Role
 import org.stevegood.sec.User
+import org.stevegood.sec.UserRole
 import org.stevegood.sk.Raid
 import org.stevegood.sk.RaidManager
 import org.stevegood.sk.RaidMember
 
 @Transactional
-class ExportService {
+class MigrationService {
+
+    def playerCharacterService
+
+    def loadFromExportData(File file) {
+        def xml = new XmlSlurper().parse(file)
+        def characterData = []
+
+        // import roles
+        xml.roles.role.each { _r ->
+            Role.findOrCreateByAuthority(_r.@authority.toString()).save(flush: true, failOnError: true)
+        }
+        // import users
+        xml.users.user.each { _u ->
+            def user = User.findOrCreateByUsername(_u.@username.toString())
+            if (!user.id) {
+                user.password = 'temp_password!'
+            }
+
+            user.enabled = _u.@enabled as Boolean
+            user.save(flush: true, failOnError: true)
+            println user.id
+            // add roles to users
+            _u.roles.role.each { _r ->
+                if (!user.authorities?.collect { it.authority }?.contains(_r.@authority.toString())) {
+                    UserRole.create(user, Role.findByAuthority(_r.@authority.toString()))
+                }
+            }
+        }
+        // import GameRoles
+        xml.gameRoles.gameRole.each { _gr ->
+            GameRole.findOrCreateByName(_gr.@name.toString()).save(flush: true)
+        }
+
+        // import CharacterClasses
+        xml.characterClasses.characterClass.each { _cc ->
+            CharacterClass.findOrCreateByName(_cc.@name.toString()).save(flush: true)
+        }
+
+        // import PlayerCharacters
+        xml.characters.character.each { _c ->
+            characterData << [
+                name: _c.@name.toString(),
+                level: _c.@level.toString().toInteger(),
+                characterClass: _c.characterClass.@name.toString(),
+                note: _c.note.toString()
+            ]
+        }
+        characterData = playerCharacterService.processCharacterData(characterData)
+
+        // import Raids
+        xml.raids.raid.each { _raid ->
+            def raid = Raid.findOrCreateByNameAndOwner(_raid.@name.toString(), User.findByUsername(_raid.owner.@username.toString())).save(flush: true)
+
+            // add RaidManagers
+            _raid.managers.manager.each { _rman ->
+                raid.addManager(User.findByUsername(_rman.user.@username.toString()))
+            }
+
+            // add RaidMembers
+            _raid.members.member.each { _rmem ->
+                def pc = PlayerCharacter.findByName(_rmem.character.@name.toString())
+                def raidMember = raid.addPlayerCharacter(pc, _rmem.@substitute as Boolean, _rmem.@onLeave as Boolean)
+                if (!raidMember.id) {
+                    raidMember.note = _rmem.note.toString()
+                }
+                raidMember.save(flush: true)
+            }
+        }
+
+        return [characterData: characterData]
+    }
 
     def systemDump(Writer writer) {
         def xml = new MarkupBuilder(writer)

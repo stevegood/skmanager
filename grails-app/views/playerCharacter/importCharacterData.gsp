@@ -33,6 +33,7 @@
                             <div class="col-lg-9">
                                 <select class="form-control" name="game" id="game">
                                     <option value="rift" selected>Rift</option>
+                                    <option value="skmanager">SKManager System Dump</option>
                                 </select>
                             </div>
                         </div>

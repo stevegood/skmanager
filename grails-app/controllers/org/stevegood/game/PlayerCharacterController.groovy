@@ -10,6 +10,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class PlayerCharacterController {
 
+    def migrationService
     def playerCharacterService
     def riftService
 
@@ -105,7 +106,7 @@ class PlayerCharacterController {
 
     @Transactional
     def saveImportCharacterdata() {
-        // TODO: import the data from uploaded file
+        // import the data from uploaded file
         def file = request.getFile('characterDataFile')
         if (file.empty) {
             flash.message = 'File cannot be empty'
@@ -121,6 +122,13 @@ class PlayerCharacterController {
         switch(params.game.toLowerCase()) {
             case 'rift':
                 characterData = riftService.processGuildDump(tmpFile)
+                break
+            case 'skmanager':
+                def dataLoadResult = migrationService.loadFromExportData(tmpFile)
+                flash.message = "${dataLoadResult.characterData.charactersAdded} character(s) added, ${dataLoadResult.characterData.charactersUpdated} character(s) updated and ${dataLoadResult.characterData.charactersIgnored} character(s) ignored"
+                redirect controller: 'admin', action: 'index'
+                return
+                break
         }
 
         if (!characterData) {
