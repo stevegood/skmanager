@@ -21,6 +21,9 @@
             <g:link controller="playerCharacter" action="importCharacterData" class="btn btn-primary" data-toggle="tooltip" title="Import Character Data">
                 <span class="glyphicon glyphicon-import"></span>
             </g:link>
+            <g:link controller="admin" action="exportAllData" class="btn btn-success" data-toggle="tooltip" title="Export All Data">
+                <span class="glyphicon glyphicon-export"></span>
+            </g:link>
         </span>
     </h1>
 </skm:pageHeader>

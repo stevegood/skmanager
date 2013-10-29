@@ -12,6 +12,8 @@ import org.stevegood.sk.RaidMember
 
 class AdminController {
 
+    def exportService
+
     def index() {
         def rolesWithCharacterCount = []
         def classesWithCharacterCount = []
@@ -42,5 +44,15 @@ class AdminController {
                 classCount: CharacterClass.count(),
                 classesWithCharacterCount: classesWithCharacterCount
         ]
+    }
+
+    def exportAllData() {
+        def stringWriter = new StringWriter()
+        def xml = exportService.systemDump(stringWriter)
+
+        response.setContentType('application/octet-stream')
+        response.setHeader('Content-disposition', "filename=skmanager-dump-${new Date().time.toString()}.xml")
+        response.outputStream << stringWriter.toString().bytes
+        return
     }
 }

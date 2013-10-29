@@ -25,7 +25,7 @@ class ExportService {
 
             users {
                 User.list().each { User userInstance ->
-                    user(id: userInstance.id, username: userInstance.username, passwordHash: userInstance.password, enabled: userInstance.enabled) {
+                    user(id: userInstance.id, username: userInstance.username, enabled: userInstance.enabled) {
                         roles {
                             userInstance.authorities?.each { Role roleInstance ->
                                 role(id: roleInstance.id ,authority: roleInstance.authority)
