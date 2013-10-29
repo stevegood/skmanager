@@ -124,6 +124,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def removeFromRaid() {
         def raidMember = RaidMember.get(params.raid_member_id)
         def raid = raidMember.raid
@@ -141,6 +142,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def repositionMembers() {
         def raid = Raid.get(params.getInt('raid_id'))
         def currentUser = User.findByUsername(springSecurityService.currentUser.username)
@@ -158,6 +160,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def makeSubstitute() {
         def raidMember = RaidMember.get(params.raid_member_id)
         def raid = raidMember?.raid
@@ -181,6 +184,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def makeCore() {
         def raidMember = RaidMember.get(params.raid_member_id)
         def raid = raidMember?.raid
@@ -202,6 +206,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def makeSubTempActive() {
         def raidMember = RaidMember.get(params.raid_member_id)
         def raid = raidMember?.raid
@@ -222,6 +227,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def removeTempActiveSub() {
         // TODO: make sub tempActive = false
 
@@ -256,6 +262,7 @@ class RaidMemberController {
         return
     }
 
+    @Transactional
     def deactivateAllTempActive() {
         def raid = Raid.get(params.getInt('id'))
         def currentUser = User.findByUsername(springSecurityService.currentUser.username)
