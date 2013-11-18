@@ -9,20 +9,21 @@
             </g:else>
         </div>
 
-    <div class="col-lg-7">
+    <div class="col-lg-8">
         <g:link controller="playerCharacter" action="show" id="${raidMember.character.id}"
                 class="${raidMember.substitute && raidMember.tempActive ? 'label label-primary' : ''}">
                 ${raidMember.character.name}
         </g:link>
-    </div>
-    <div class="col-lg-1">
-        <g:if test="${canManage && last && (!raidMember.substitute || (raidMember.substitute && raidMember.tempActive))}">
-            <g:link class="btn btn-warning btn-xs move-to-bottom-btn"
-                    controller="raidMember" action="moveToBottom"
-                    params="${[raid_member_id: raidMember.id]}">
-                <span class="glyphicon glyphicon-arrow-down"></span>
-            </g:link>
-        </g:if>
+        <g:each in="${raidMember.character.roles}" var="role">
+            <span class="role-icon-extra-tiny">
+                <g:if test="${role.icon}">
+
+                        <img src="${createLink(controller: 'gameRole', action: 'icon', id: role.id)}"
+                             alt="${role.name}"/>
+
+                </g:if>
+            </span>
+        </g:each>
     </div>
     <div class="col-lg-1">
         <g:if test="${canManage}">
@@ -31,6 +32,17 @@
                     <span class="glyphicon glyphicon-cog"></span>
                 </a>
                 <ul class="dropdown-menu">
+                    <g:if test="${last && (!raidMember.substitute || (raidMember.substitute && raidMember.tempActive))}">
+                        <li role="resentation">
+                            <g:link class="alert-warning"
+                                    controller="raidMember" action="moveToBottom"
+                                    params="${[raid_member_id: raidMember.id]}">
+                                <span class="glyphicon glyphicon-arrow-down"></span>
+                                Move to bottom
+                            </g:link>
+                        </li>
+                    </g:if>
+
                     <g:if test="${raidMember.substitute && !raidMember.tempActive}">
                         <li role="presentation">
                             <g:link controller="raidMember" action="makeSubTempActive" params="${[raid_member_id: raidMember.id]}">

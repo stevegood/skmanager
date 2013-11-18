@@ -8,19 +8,19 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class GameRoleController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "POST"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond GameRole.list(params), model:[gameRoleInstanceCount: GameRole.count()]
+        [gameRoleInstanceCount: GameRole.count(), gameRoleInstanceList: GameRole.list(params)]
     }
 
     def show(GameRole gameRoleInstance) {
-        respond gameRoleInstance
+        [gameRoleInstance: gameRoleInstance]
     }
 
     def create() {
-        respond new GameRole(params)
+        [gameRoleInstance: new GameRole(params)]
     }
 
     @Transactional
@@ -31,23 +31,23 @@ class GameRoleController {
         }
 
         if (gameRoleInstance.hasErrors()) {
-            respond gameRoleInstance.errors, view:'create'
+            render view:'create', model: [gameRoleInstance: gameRoleInstance]
             return
+        }
+
+        def iconFile = request.getFile('icon')
+        if (iconFile && !iconFile.empty) {
+            gameRoleInstance.icon = iconFile.bytes
         }
 
         gameRoleInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'gameRoleInstance.label', default: 'GameRole'), gameRoleInstance.id])
-                redirect gameRoleInstance
-            }
-            '*' { respond gameRoleInstance, [status: CREATED] }
-        }
+        flash.message = message(code: 'default.created.message', args: [message(code: 'gameRoleInstance.label', default: 'GameRole'), gameRoleInstance.id])
+        redirect gameRoleInstance
     }
 
     def edit(GameRole gameRoleInstance) {
-        respond gameRoleInstance
+        [gameRoleInstance: gameRoleInstance]
     }
 
     @Transactional
@@ -58,19 +58,19 @@ class GameRoleController {
         }
 
         if (gameRoleInstance.hasErrors()) {
-            respond gameRoleInstance.errors, view:'edit'
+            render view:'edit', model: [gameRoleInstance: gameRoleInstance]
             return
+        }
+
+        def iconFile = request.getFile('icon')
+        if (iconFile && !iconFile.empty) {
+            gameRoleInstance.icon = iconFile.bytes
         }
 
         gameRoleInstance.save flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'GameRole.label', default: 'GameRole'), gameRoleInstance.id])
-                redirect gameRoleInstance
-            }
-            '*'{ respond gameRoleInstance, [status: OK] }
-        }
+        flash.message = message(code: 'default.updated.message', args: [message(code: 'GameRole.label', default: 'GameRole'), gameRoleInstance.id])
+        redirect gameRoleInstance
     }
 
     @Transactional
@@ -83,22 +83,17 @@ class GameRoleController {
 
         gameRoleInstance.delete flush:true
 
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'GameRole.label', default: 'GameRole'), gameRoleInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'GameRole.label', default: 'GameRole'), gameRoleInstance.id])
+        redirect action:"index", method:"GET"
+    }
+
+    def icon(GameRole gameRoleInstance){
+        byte[] iconBytes = gameRoleInstance.icon
+        response.outputStream << iconBytes
     }
 
     protected void notFound() {
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'gameRoleInstance.label', default: 'GameRole'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+        flash.message = message(code: 'default.not.found.message', args: [message(code: 'gameRoleInstance.label', default: 'GameRole'), params.id])
+        redirect action: "index", method: "GET"
     }
 }

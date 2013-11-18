@@ -5,9 +5,11 @@ class GameRole {
     static auditable = true
 
     String name
+    byte[] icon
 
     static constraints = {
         name blank: false, unique: true
+        icon nullable: true
     }
 
     static mapping = {

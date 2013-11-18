@@ -64,10 +64,15 @@ class PlayerCharacterController {
             return
         }
 
+        if (params.roles instanceof String) {
+            params.roles = [params.roles]
+        }
+
         playerCharacterInstance.save flush:true
         playerCharacterInstance.roles?.each {
             playerCharacterInstance.removeRole(it)
         }
+
         params?.roles?.each {
             playerCharacterInstance.addRole(GameRole.get(it as long))
         }

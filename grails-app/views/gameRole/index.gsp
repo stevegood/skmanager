@@ -25,7 +25,7 @@
                         <table>
                             <thead>
                             <tr>
-
+                                <th></th>
                                 <g:sortableColumn property="name" title="${message(code: 'gameRole.name.label', default: 'Name')}" />
 
                             </tr>
@@ -34,6 +34,16 @@
                             <g:each in="${gameRoleInstanceList}" status="i" var="gameRoleInstance">
                                 <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
+                                    <td>
+                                        <span class="role-icon-tiny">
+                                            <g:if test="${gameRoleInstance.icon}">
+                                                <g:link controller="gameRole" action="show" id="${gameRoleInstance.id}">
+                                                    <img src="${createLink(controller: 'gameRole', action: 'icon', id: gameRoleInstance.id)}"
+                                                         alt="${gameRoleInstance.name}"/>
+                                                </g:link>
+                                            </g:if>
+                                        </span>
+                                    </td>
                                     <td><g:link action="show" id="${gameRoleInstance.id}">${fieldValue(bean: gameRoleInstance, field: "name")}</g:link></td>
 
                                 </tr>

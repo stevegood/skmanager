@@ -10,3 +10,11 @@
 	<g:textField name="name" required="" value="${gameRoleInstance?.name}"/>
 </div>
 
+<div class="form-group">
+    <label class="control-label col-lg-3" for="icon">Icon</label>
+    <div class="col-lg-9">
+        <input type="file" name="icon" id="icon" class="form-control" accept="image/*"/>
+        <p class="help-block">Select an image to use as an icon. (optional)</p>
+    </div>
+</div>
+

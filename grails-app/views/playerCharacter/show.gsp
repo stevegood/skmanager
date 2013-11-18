@@ -37,7 +37,15 @@
                         <ul class="list-group">
                             <g:each in="${playerCharacterInstance.roles}" var="role">
                                 <li class="list-group-item">
-                                    ${role.name}
+                                    <span class="role-icon-tiny">
+                                        <g:if test="${role.icon}">
+                                            <g:link controller="gameRole" action="show" id="${role.id}">
+                                                <img src="${createLink(controller: 'gameRole', action: 'icon', id: role.id)}"
+                                                     alt="${role.name}"/>
+                                            </g:link>
+                                        </g:if>
+                                    </span>
+                                    <g:link controller="gameRole" action="show" id="${role.id}">${role.name}</g:link>
                                 </li>
                             </g:each>
                         </ul>
