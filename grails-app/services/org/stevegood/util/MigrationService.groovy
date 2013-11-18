@@ -75,7 +75,8 @@ class MigrationService {
             // add RaidMembers
             _raid.members.member.each { _rmem ->
                 def pc = PlayerCharacter.findByName(_rmem.character.@name.toString())
-                def raidMember = raid.addPlayerCharacter(pc, _rmem.@substitute as Boolean, _rmem.@onLeave as Boolean)
+                println "${pc.name} -> Sub: ${_rmem.@substitute.toString().toLowerCase() == 'true'}"
+                def raidMember = raid.addPlayerCharacter(pc, _rmem.@substitute.toString().toLowerCase() == 'true', _rmem.@onLeave.toString().toLowerCase() == 'true')
                 if (!raidMember.id) {
                     raidMember.note = _rmem.note.toString()
                 }
