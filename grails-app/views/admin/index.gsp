@@ -44,9 +44,7 @@
                     <ul class="list-group">
                         <g:each in="${recentUsers}">
                             <li class="list-group-item">
-                                <g:link controller="user" action="show" id="${it.id}">
-                                    ${it.username}
-                                </g:link>
+                                <skm:userLink user="${it}"/>
                             </li>
                         </g:each>
                     </ul>

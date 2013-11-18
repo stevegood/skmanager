@@ -13,7 +13,8 @@ class UserController {
         [userInstanceList: User.list(params), userInstanceCount: User.count()]
     }
 
-    def show(User userInstance) {
+    def show() {
+        User userInstance = User.findByUsername(params.username as String)
         [userInstance: userInstance]
     }
 
@@ -107,6 +108,32 @@ class UserController {
 
         flash.message = message(code: 'default.deleted.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
         redirect action:"index", method:"GET"
+    }
+
+    @Transactional
+    def enableDisable(User userInstance) {
+        toggleProperty(userInstance, 'enabled')
+    }
+
+    @Transactional
+    def lockUnlock(User userInstance) {
+        toggleProperty(userInstance, 'accountLocked')
+    }
+
+    @Transactional
+    def expireActivateAccount(User userInstance) {
+        toggleProperty(userInstance, 'accountExpired')
+    }
+
+    @Transactional
+    def expireActivatePassword(User userInstance) {
+        toggleProperty(userInstance, 'passwordExpired')
+    }
+
+    protected void toggleProperty(User userInstance, String property) {
+        userInstance[property] = !userInstance[property]
+        userInstance.save()
+        redirect action: 'show', params: [username: userInstance.username]
     }
 
     protected void notFound() {
