@@ -91,7 +91,13 @@
         %{-- flash messages --}%
         <g:if test="${flash.message}">
             <div class="alert alert-${flash.type ?: 'info'}">
-                ${flash.message}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            ${flash.message}
+                        </div>
+                    </div>
+                </div>
             </div>
         </g:if>
 

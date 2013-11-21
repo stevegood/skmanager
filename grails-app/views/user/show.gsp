@@ -1,89 +1,122 @@
-
 <%@ page import="org.stevegood.sec.User" %>
+
+<g:set var="canManage" value="${sec.username() == userInstance.username}" />
+<sec:ifAllGranted roles="ROLE_ADMIN">
+    <g:set var="canManage" value="${true}" />
+</sec:ifAllGranted>
+
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#show-user" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="show-user" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<ol class="property-list user">
-			
-				<g:if test="${userInstance?.username}">
-				<li class="fieldcontain">
-					<span id="username-label" class="property-label"><g:message code="user.username.label" default="Username" /></span>
-					
-						<span class="property-value" aria-labelledby="username-label"><g:fieldValue bean="${userInstance}" field="username"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.password}">
-				<li class="fieldcontain">
-					<span id="password-label" class="property-label"><g:message code="user.password.label" default="Password" /></span>
-					
-						<span class="property-value" aria-labelledby="password-label"><g:fieldValue bean="${userInstance}" field="password"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.accountExpired}">
-				<li class="fieldcontain">
-					<span id="accountExpired-label" class="property-label"><g:message code="user.accountExpired.label" default="Account Expired" /></span>
-					
-						<span class="property-value" aria-labelledby="accountExpired-label"><g:formatBoolean boolean="${userInstance?.accountExpired}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.accountLocked}">
-				<li class="fieldcontain">
-					<span id="accountLocked-label" class="property-label"><g:message code="user.accountLocked.label" default="Account Locked" /></span>
-					
-						<span class="property-value" aria-labelledby="accountLocked-label"><g:formatBoolean boolean="${userInstance?.accountLocked}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.enabled}">
-				<li class="fieldcontain">
-					<span id="enabled-label" class="property-label"><g:message code="user.enabled.label" default="Enabled" /></span>
-					
-						<span class="property-value" aria-labelledby="enabled-label"><g:formatBoolean boolean="${userInstance?.enabled}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.passwordExpired}">
-				<li class="fieldcontain">
-					<span id="passwordExpired-label" class="property-label"><g:message code="user.passwordExpired.label" default="Password Expired" /></span>
-					
-						<span class="property-value" aria-labelledby="passwordExpired-label"><g:formatBoolean boolean="${userInstance?.passwordExpired}" /></span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form url="[resource:userInstance, action:'delete']" method="DELETE">
-				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${userInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
-		</div>
-	</body>
+<head>
+    <meta name="layout" content="main">
+    <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}"/>
+    <title><g:message code="default.show.label" args="[entityName]"/></title>
+</head>
+
+<body>
+
+<div class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h1>${userInstance.username}</h1>
+            </div>
+            <div class="col-lg-3 btns">
+                <sec:ifLoggedIn>
+                    <g:if test="${canManage}">
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></span> <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <g:link action="edit" params="${[username: userInstance.username]}">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                            <g:message code="default.button.edit.label" default="Edit"/>
+                                        </g:link>
+                                    </li>
+                                    <sec:ifAllGranted roles="ROLE_ADMIN">
+                                        <li class="divider"></li>
+                                        <li>
+                                            <g:link controller="user" action="enableDisable" id="${userInstance.id}">
+                                                <span class="glyphicon glyphicon-${userInstance.enabled ? 'remove' : 'ok'}"></span>
+                                                ${userInstance.enabled ? 'Disable' : 'Enable'} Account
+                                            </g:link>
+                                        </li>
+
+                                        <li>
+                                            <g:link controller="user" action="lockUnlock" id="${userInstance.id}">
+                                                <span class="glyphicon glyphicon-${userInstance.accountLocked ? 'ok' : 'remove'}"></span>
+                                                ${userInstance.accountLocked ? 'Unlock' : 'Lock'} Account
+                                            </g:link>
+                                        </li>
+
+                                        <li>
+                                            <g:link controller="user" action="expireActivateAccount" id="${userInstance.id}">
+                                                <span class="glyphicon glyphicon-${userInstance.accountExpired ? 'ok' : 'remove'}"></span>
+                                                ${userInstance.accountExpired ? 'Activate' : 'Expire'} Account
+                                            </g:link>
+                                        </li>
+
+                                        <li>
+                                            <g:link controller="user" action="expireActivatePassword" id="${userInstance.id}">
+                                                <span class="glyphicon glyphicon-${userInstance.passwordExpired ? 'ok' : 'remove'}"></span>
+                                                ${userInstance.passwordExpired ? 'Activate' : 'Expire'} Password
+                                            </g:link>
+                                        </li>
+                                    </sec:ifAllGranted>
+                                </ul>
+                            </div>
+                        </div>
+                    </g:if>
+                </sec:ifLoggedIn>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>Account Enabled</th>
+                        <th>Account Locked</th>
+                        <th>Account Expired</th>
+                        <th>Password Expired</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><skm:formatBoolean boolean="${userInstance.enabled}" /></td>
+                        <td><skm:formatBoolean boolean="${userInstance.accountLocked}" /></td>
+                        <td><skm:formatBoolean boolean="${userInstance.accountExpired}" /></td>
+                        <td><skm:formatBoolean boolean="${userInstance.passwordExpired}" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Roles</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <g:each in="${userInstance.authorities}" var="role">
+                            <li class="list-group-item">
+                                ${role.authority}
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

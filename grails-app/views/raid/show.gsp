@@ -20,12 +20,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h2>
-                        %{--<g:link controller="user" action="show" id="${raidInstance?.owner?.id}">--}%
-                            ${raidInstance?.owner?.username.capitalize()}'s
-                        %{--</g:link>--}%
-                        ${raidInstance.name}
-                    </h2>
+                    <h2>${raidInstance.name}</h2>
                 </div>
                 <div class="col-lg-4 btns">
                     <sec:ifLoggedIn>
