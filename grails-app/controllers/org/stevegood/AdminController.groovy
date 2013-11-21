@@ -42,7 +42,9 @@ class AdminController {
                 roleCount: GameRole.count(),
                 rolesWithCaracterCount: rolesWithCharacterCount,
                 classCount: CharacterClass.count(),
-                classesWithCharacterCount: classesWithCharacterCount
+                classesWithCharacterCount: classesWithCharacterCount,
+                recentRaids: Raid.list(sort: 'id', order: 'desc', max: 4),
+                recentCharacters: PlayerCharacter.list(sort: 'id', order: 'desc', max: 4)
         ]
     }
 

@@ -31,7 +31,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <g:link action="edit" resource="${userInstance}">
+                                        <g:link action="edit" params="${[username: userInstance.username]}">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                             <g:message code="default.button.edit.label" default="Edit"/>
                                         </g:link>
@@ -78,7 +78,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
 
             <table class="table table-responsive table-striped">
                 <thead>
@@ -95,10 +95,26 @@
                         <td><skm:formatBoolean boolean="${userInstance.accountLocked}" /></td>
                         <td><skm:formatBoolean boolean="${userInstance.accountExpired}" /></td>
                         <td><skm:formatBoolean boolean="${userInstance.passwordExpired}" /></td>
-
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Roles</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <g:each in="${userInstance.authorities}" var="role">
+                            <li class="list-group-item">
+                                ${role.authority}
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

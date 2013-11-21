@@ -29,6 +29,18 @@ class User {
 		UserRole.findAllByUser(this).collect { it.role } as Set
 	}
 
+    def addRole(String authority) {
+        addRole(Role.findByAuthority(authority))
+    }
+
+    def addRole(Role role) {
+        UserRole.findOrCreateByUserAndRole(this, role)?.save()
+    }
+
+    def removeRole(Role role) {
+        UserRole.findByUserAndRole(this, role)?.delete(flush: true)
+    }
+
 	def beforeInsert() {
 		encodePassword()
 	}

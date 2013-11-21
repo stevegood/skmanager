@@ -30,30 +30,8 @@
 
 <div class="container">
     <div class="row">
-        %{-- users --}%
-        <div class="col-lg-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        <g:link controller="user" action="index">Users</g:link>
-                        <span class="pull-right badge">${userCount}</span>
-                    </h3>
-                </div>
-                <div class="panel-body">
-                    Recent Registrations
-                    <ul class="list-group">
-                        <g:each in="${recentUsers}">
-                            <li class="list-group-item">
-                                <skm:userLink user="${it}"/>
-                            </li>
-                        </g:each>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
         %{-- Classes --}%
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -77,7 +55,7 @@
         </div>
 
         %{-- roles --}%
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -99,45 +77,9 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-
-        %{-- User Roles --}%
-        <div class="col-lg-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-lg-9">
-                            <h3 class="panel-title">
-                                <g:link controller="userRole" action="index">User Roles</g:link>
-                            </h3>
-                        </div>
-                        <div class="col-lg-1">
-                            <g:link controller="userRole" action="create" class="btn btn-primary btn-xs">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </g:link>
-                        </div>
-                        <div class="col-lg-1">
-                            <span class="badge">${userRoleCount}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <ul class="list-group">
-                        <g:each in="${userRolesWithUserCount}">
-                            <li class="list-group-item">
-                                <g:link controller="role" action="show" id="${it.role.id}">${it.role.authority}</g:link>
-                                <span class="pull-right badge">${it.userCount}</span>
-                            </li>
-                        </g:each>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
         %{-- characters --}%
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -146,13 +88,19 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <ul class="list-group"></ul>
+                    <ul class="list-group">
+                        <g:each in="${recentCharacters}" var="character">
+                            <li class="list-group-item">
+                                <g:link controller="playerCharacter" action="show" id="${character.id}">${character.name}</g:link>
+                            </li>
+                        </g:each>
+                    </ul>
                 </div>
             </div>
         </div>
 
         %{-- raids --}%
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
@@ -161,7 +109,71 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <ul class="list-group"></ul>
+                    <ul class="list-group">
+                        <g:each in="${recentRaids}" var="raid">
+                            <li class="list-group-item">
+                                <g:link controller="raid" action="show" id="${raid.id}">${raid.name}</g:link>
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        %{-- User Roles --}%
+        %{--<div class="col-lg-4">--}%
+            %{--<div class="panel panel-primary">--}%
+                %{--<div class="panel-heading">--}%
+                    %{--<div class="row">--}%
+                        %{--<div class="col-lg-9">--}%
+                            %{--<h3 class="panel-title">--}%
+                                %{--<g:link controller="userRole" action="index">User Roles</g:link>--}%
+                            %{--</h3>--}%
+                        %{--</div>--}%
+                        %{--<div class="col-lg-1">--}%
+                            %{--<g:link controller="userRole" action="create" class="btn btn-primary btn-xs">--}%
+                                %{--<span class="glyphicon glyphicon-plus"></span>--}%
+                            %{--</g:link>--}%
+                        %{--</div>--}%
+                        %{--<div class="col-lg-1">--}%
+                            %{--<span class="badge">${userRoleCount}</span>--}%
+                        %{--</div>--}%
+                    %{--</div>--}%
+                %{--</div>--}%
+                %{--<div class="panel-body">--}%
+                    %{--<ul class="list-group">--}%
+                        %{--<g:each in="${userRolesWithUserCount}">--}%
+                            %{--<li class="list-group-item">--}%
+                                %{--<g:link controller="role" action="show" id="${it.role.id}">${it.role.authority}</g:link>--}%
+                                %{--<span class="pull-right badge">${it.userCount}</span>--}%
+                            %{--</li>--}%
+                        %{--</g:each>--}%
+                    %{--</ul>--}%
+                %{--</div>--}%
+            %{--</div>--}%
+        %{--</div>--}%
+
+        %{-- users --}%
+        <div class="col-lg-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <g:link controller="user" action="index">Users</g:link>
+                        <span class="pull-right badge">${userCount}</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    Recent Registrations
+                    <ul class="list-group">
+                        <g:each in="${recentUsers}">
+                            <li class="list-group-item">
+                                <skm:userLink user="${it}"/>
+                            </li>
+                        </g:each>
+                    </ul>
                 </div>
             </div>
         </div>

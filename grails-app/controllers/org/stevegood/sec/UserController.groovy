@@ -74,15 +74,41 @@ class UserController {
         redirect controller: 'login', action: 'auth', params: [username: userInstance.username]
     }
 
-    def edit(User userInstance) {
-        [userInstance: userInstance]
+    def edit() {
+        [userInstance: User.findByUsername(params.username), roleInstanceList: Role.list([sort: 'authority'])]
     }
 
     @Transactional
-    def update(User userInstance) {
+    def update() {
+        User userInstance = User.findByUsername(params.username)
+
         if (userInstance == null) {
             notFound()
             return
+        }
+
+        userInstance.username = params.username
+        if (params.password.trim().size()) {
+            if (params.password.trim() != params.password2.trim()) {
+                flash.message = 'Passwords don\'t match, please try again.'
+                flash.type = 'danger'
+                render view: 'edit', model: [userInstance: userInstance]
+                return
+            }
+
+            userInstance.password = params.password.trim()
+        }
+
+        userInstance.authorities?.each { Role role ->
+            userInstance.removeRole(role)
+        }
+
+        if (params.roles instanceof String) {
+            userInstance.addRole(params.roles)
+        } else {
+            params.roles.each {
+                userInstance.addRole(it)
+            }
         }
 
         if (userInstance.hasErrors()) {
@@ -92,8 +118,8 @@ class UserController {
 
         userInstance.save flush:true
 
-        flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-        redirect userInstance
+        flash.message = "${userInstance.username} updated!"
+        redirect action: 'show', params: [username: userInstance.username]
     }
 
     @Transactional

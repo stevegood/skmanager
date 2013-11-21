@@ -27,6 +27,14 @@
 
                             <div class="form-group">
                                 <div class="col-lg-8 col-lg-offset-4">
+                                    <div class="alert alert-info">
+                                        <span class="medium">Leave password fields empty to keep the current password</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-lg-8 col-lg-offset-4">
                                     <g:actionSubmit class="btn btn-primary" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
                                 </div>
                             </div>

@@ -32,3 +32,10 @@
 	</div>
 </div>
 
+<div class="form-group">
+    <label class="control-label col-lg-4" for="roles">Roles</label>
+    <div class="col-lg-8">
+        <g:select name="roles" from="${roleInstanceList}" value="${userInstance.authorities}" multiple="true" class="form-control" />
+    </div>
+</div>
+
