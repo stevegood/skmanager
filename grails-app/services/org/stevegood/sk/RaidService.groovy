@@ -56,4 +56,29 @@ class RaidService {
 
         compressMembers(raid)
     }
+
+    def parseRaidString(String raidString) {
+        def characterData = []
+        String raidStringData = raidString.split(':=')[1]
+        def callingsData = raidStringData.split(':#')
+        callingsData.each { String cd ->
+            def callingParts = cd.split(':@')
+            String callingData = callingParts[1]
+
+            callingData.split(',').each { String d ->
+                def data = d.split(':!')
+                String characterName = data[0]
+                String characterDataString = data[1]
+
+                def map = [name: characterName]
+                characterDataString.split('!!').each {
+                    def propData = it.split('::')
+                    map[propData[0]] = propData[1]
+                }
+                characterData << map
+            }
+        }
+
+        return characterData
+    }
 }

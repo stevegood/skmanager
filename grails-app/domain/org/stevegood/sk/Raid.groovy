@@ -1,5 +1,6 @@
 package org.stevegood.sk
 
+import org.stevegood.game.CharacterClass
 import org.stevegood.game.PlayerCharacter
 import org.stevegood.sec.User
 
@@ -22,10 +23,6 @@ class Raid {
 
     static mapping = {
         sort 'name'
-    }
-
-    String toString() {
-        name
     }
 
     List<User> getManagers() {
@@ -72,5 +69,46 @@ class Raid {
 
     boolean isManager(String username) {
         (managers?.findAll { it?.username == username }?.size() ?: 0) > 0
+    }
+
+    String toString() {
+        name
+    }
+
+    String toRaidString(){
+        String str
+        // TODO: recurse and build the raid as a string
+        /*
+         * SAMPLE STRING:
+         * Test Raid:=Cleric:@Dalston:!level::60!!listPosition::0,Terela:!level::60!!listPosition::1:#Mage:@Knopix:!level::60!!listPosition::0
+         */
+        str = "$name:="
+        def callingStrs = []
+        CharacterClass.list(sort: 'name', order: 'asc')?.each { calling ->
+
+            def raidMemberStrs = []
+            RaidMember.withCriteria {
+                eq 'raid', this
+                character {
+                    eq 'characterClass', calling
+                }
+                or {
+                    eq 'substitute', false
+                    and {
+                        eq 'substitute', true
+                        eq 'tempActive', true
+                    }
+                }
+                order 'listPosition', 'asc'
+            }?.each { raidMember ->
+                raidMemberStrs << "${raidMember.character.name}:!level::${raidMember.character.level}!!listPosition::${raidMember.listPosition}!!substitute::${raidMember.substitute}"
+            }
+
+            callingStrs << "${calling.name}:@${raidMemberStrs.join(',')}"
+        }
+
+        str += callingStrs.join(':#')
+
+        return str
     }
 }

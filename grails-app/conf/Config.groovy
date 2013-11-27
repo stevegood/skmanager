@@ -141,7 +141,8 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/admin/**':                      ['ROLE_ADMIN'],
     '/userRole/**':                   ['ROLE_ADMIN'],
     '/**':                            ['IS_AUTHENTICATED_FULLY'],
-    '/raid/show/**':                  ['permitAll']
+    '/raid/show/**':                  ['permitAll'],
+    '/gameRole/icon/**':              ['permitAll']
 ]
 
 auditLog.verbose = true

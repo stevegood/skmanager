@@ -40,7 +40,11 @@ jQuery(function($){
         $search = $('#search'),
         $substituteCheckBox = $('#substitute'),
         $lists = $('#lists'),
-        $progressBar = $('#progress-bar');
+        $progressBar = $('#progress-bar'),
+        $raidStringModal = $('#raidStringModal'),
+        $raidStringMenuItem = $('#raidStringMenuItem'),
+        $raidStringImportBtn = $('#raidStringImportBtn'),
+        $raidStringImportModal = $('#raidStringImportModal');
 
     $progressBar.hide();
 
@@ -97,4 +101,24 @@ jQuery(function($){
             }
         });
     });
+
+    $raidStringMenuItem.on('click', function(){
+        $raidStringModal.modal();
+    });
+
+    $raidStringImportBtn.on('click', function(){
+        $raidStringModal.modal('hide');
+        $raidStringImportModal.modal();
+    });
+
+    $('#importRaidStringSubmitBtn').on('click', function(){
+        if ($('#importString').val().trim() == '') {
+            alert('Raid string cannot be blank!');
+            return;
+        }
+
+        $raidStringImportModal.modal('hide');
+        $.blockUI();
+        $('#importRaidStringForm').submit();
+    })
 });

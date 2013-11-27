@@ -12,6 +12,7 @@ class RaidController {
     static allowedMethods = [save: "POST", update: "PUT"]
 
     def raidService
+    def riftService
     def springSecurityService
 
     def index(Integer max) {
@@ -39,7 +40,6 @@ class RaidController {
         characterClasses.each { CharacterClass _class ->
             def classMap = [characterClass: _class, members: [], subs: []]
             raidMembers.findAll { it.character.characterClass == _class }?.each { RaidMember raidMember ->
-                println "${raidMember.character.name} :: ${raidMember.substitute}"
                 classMap[raidMember.substitute && !raidMember.tempActive ? 'subs' : 'members'] << raidMember
             }
             classMap.members = classMap.members.sort { RaidMember a, RaidMember b -> a.listPosition <=> b.listPosition }
@@ -47,7 +47,6 @@ class RaidController {
             raidMembersByClass << classMap
         }
 
-        println raidMembersByClass
         [raidInstance: raidInstance, characterClasses: characterClasses, colWidth: colWidth, raidMembersByClass: raidMembersByClass]
     }
 
@@ -118,13 +117,31 @@ class RaidController {
 
     @Transactional
     def addCharacter() {
-        println params
         def pc = PlayerCharacter.get(params.pc_id)
         def raid = Raid.get(params.raid_id)
         def raidMember = raid.addPlayerCharacter(pc)
         raidMember.note = params.note
         raidMember.substitute = params?.boolean('substitute')
         render raidMember as JSON
+    }
+
+    @Transactional
+    def importRaidString() {
+        def raidInstance = Raid.get(params.id as long)
+        if (raidInstance.name.toLowerCase() != params.importString.split(':=')[0].toLowerCase()) {
+            flash.message = "Raid string does not appear to be for this raid!"
+            flash.type = 'danger'
+        } else {
+            // import the raid string data
+            raidService.parseRaidString(params.importString.toString()).each {
+                PlayerCharacter pc = PlayerCharacter.findByName(it.name as String)
+                RaidMember raidMember = RaidMember.findByRaidAndCharacter(raidInstance, pc)
+
+                raidMember.listPosition = it.listPosition as int
+                raidMember.save()
+            }
+        }
+        redirect action: 'show', id: raidInstance.id
     }
 
     protected void notFound() {

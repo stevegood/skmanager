@@ -22,7 +22,7 @@ modules = {
 
     bootstrap_js {
         dependsOn 'jquery'
-        resource url: 'js/bootstrap.min.js'
+        resource url: 'js/bootstrap.min.js', disposition: 'head'
     }
 
     typeahead {
