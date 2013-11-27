@@ -68,8 +68,8 @@ class MigrationService {
             def raid = Raid.findOrCreateByNameAndOwner(_raid.@name.toString(), User.findByUsername(_raid.owner.@username.toString())).save(flush: true)
 
             // add RaidManagers
-            _raid.managers.manager.each { _rman ->
-                raid.addManager(User.findByUsername(_rman.user.@username.toString()))
+            _raid.managers.user.each { _rman ->
+                raid.addManager(User.findByUsername(_rman.@username.toString()))
             }
 
             // add RaidMembers
@@ -139,10 +139,8 @@ class MigrationService {
                     raid(id: raidInstance.id, name: raidInstance.name, hidden: raidInstance.hidden) {
                         owner(id: raidInstance.owner.id, username: raidInstance.owner.username)
                         managers {
-                            raidInstance.managers?.each { RaidManager rManager ->
-                                manager(id: rManager.id) {
-                                    user(id: rManager.manager.id, username: rManager.manager.username)
-                                }
+                            raidInstance.managers?.each { User rManager ->
+                                user(id: rManager.id, username: rManager.username)
                             }
                         }
 
