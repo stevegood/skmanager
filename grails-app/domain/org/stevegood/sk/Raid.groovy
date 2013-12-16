@@ -43,29 +43,29 @@ class Raid {
         RaidManager.findAllByManager(manager)?.collect { it.raid } ?: []
     }
 
-    List<RaidMember> getMembers() {
-        RaidMember.findAllByRaid(this) ?: []
-    }
+//    List<RaidMember> getMembers() {
+//        RaidMember.findAllByRaid(this) ?: []
+//    }
 
-    def addPlayerCharacter(PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
-            RaidMember.create(this, character, substitute, onLeave)
-    }
+//    def addPlayerCharacter(PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
+//            RaidMember.create(this, character, substitute, onLeave)
+//    }
 
-    def removePlayerCharacter(PlayerCharacter character) {
-        RaidMember.findByRaidAndCharacter(this, character)?.delete(flush: true)
-    }
+//    def removePlayerCharacter(PlayerCharacter character) {
+//        RaidMember.findByRaidAndCharacter(this, character)?.delete(flush: true)
+//    }
 
-    static List<Raid> findAllByMember(PlayerCharacter character) {
-        RaidMember.findAllByCharacter(character)?.collect { it.raid } ?: []
-    }
+//    static List<Raid> findAllByMember(PlayerCharacter character) {
+//        RaidMember.findAllByCharacter(character)?.collect { it.raid } ?: []
+//    }
 
-    int getMemberCount(){
-        RaidMember.countByRaidAndSubstitute(this, false)
-    }
+//    int getMemberCount(){
+//        RaidMember.countByRaidAndSubstitute(this, false)
+//    }
 
-    int getSubstituteCount() {
-        RaidMember.countByRaidAndSubstitute(this, true)
-    }
+//    int getSubstituteCount() {
+//        RaidMember.countByRaidAndSubstitute(this, true)
+//    }
 
     boolean isManager(String username) {
         (managers?.findAll { it?.username == username }?.size() ?: 0) > 0
@@ -77,7 +77,7 @@ class Raid {
 
     String toRaidString(){
         String str
-        // TODO: recurse and build the raid as a string
+        // recurse and build the raid as a string
         /*
          * SAMPLE STRING:
          * Test Raid:=Cleric:@Dalston:!level::60!!listPosition::0,Terela:!level::60!!listPosition::1:#Mage:@Knopix:!level::60!!listPosition::0
