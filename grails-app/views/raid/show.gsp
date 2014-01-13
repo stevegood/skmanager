@@ -10,7 +10,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'raid.label', default: 'Raid')}" />
-		<title>${raidInstance?.owner?.username.capitalize()}'s ${raidInstance.name}</title>
+		<title>${raidInstance.name}</title>
         <r:require module="typeahead" />
 	</head>
 	<body>
