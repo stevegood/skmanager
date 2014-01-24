@@ -16,6 +16,7 @@ class Raid {
     boolean hidden = false
 
     static belongsTo = [owner:User]
+    static hasMany = [lootLists:LootList]
 
     static constraints = {
         owner unique: ['name']
@@ -43,29 +44,21 @@ class Raid {
         RaidManager.findAllByManager(manager)?.collect { it.raid } ?: []
     }
 
-//    List<RaidMember> getMembers() {
-//        RaidMember.findAllByRaid(this) ?: []
-//    }
+    def getMembers() {
+        def members = []
+        LootList.findAllByRaid(this)?.each { lootList ->
+            members += lootList.members
+        }
+        members.unique()
+    }
 
-//    def addPlayerCharacter(PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
-//            RaidMember.create(this, character, substitute, onLeave)
-//    }
+    int getMemberCount() {
+        members.findAll { it.substitute = false }.size()
+    }
 
-//    def removePlayerCharacter(PlayerCharacter character) {
-//        RaidMember.findByRaidAndCharacter(this, character)?.delete(flush: true)
-//    }
-
-//    static List<Raid> findAllByMember(PlayerCharacter character) {
-//        RaidMember.findAllByCharacter(character)?.collect { it.raid } ?: []
-//    }
-
-//    int getMemberCount(){
-//        RaidMember.countByRaidAndSubstitute(this, false)
-//    }
-
-//    int getSubstituteCount() {
-//        RaidMember.countByRaidAndSubstitute(this, true)
-//    }
+    int getSubstituteCount() {
+        members.findAll { it.substitute = true }.size()
+    }
 
     boolean isManager(String username) {
         (managers?.findAll { it?.username == username }?.size() ?: 0) > 0

@@ -32,22 +32,7 @@ class RaidController {
             return
         }
 
-        def characterClasses = CharacterClass.list()
-        def colWidth = characterClasses.size() ? 12 / characterClasses.size() : 0
-
-        def raidMembersByClass = []
-        def raidMembers = raidInstance.members
-        characterClasses.each { CharacterClass _class ->
-            def classMap = [characterClass: _class, members: [], subs: []]
-            raidMembers.findAll { it.character.characterClass == _class }?.each { RaidMember raidMember ->
-                classMap[raidMember.substitute && !raidMember.tempActive ? 'subs' : 'members'] << raidMember
-            }
-            classMap.members = classMap.members.sort { RaidMember a, RaidMember b -> a.listPosition <=> b.listPosition }
-            classMap.subs = classMap.subs.sort { RaidMember a, RaidMember b -> a.listPosition <=> b.listPosition }
-            raidMembersByClass << classMap
-        }
-
-        [raidInstance: raidInstance, characterClasses: characterClasses, colWidth: colWidth, raidMembersByClass: raidMembersByClass]
+        [raidInstance: raidInstance]
     }
 
     def create() {
@@ -118,8 +103,8 @@ class RaidController {
     @Transactional
     def addCharacter() {
         def pc = PlayerCharacter.get(params.pc_id)
-        def raid = Raid.get(params.raid_id)
-        def raidMember = raid.addPlayerCharacter(pc)
+        def list = LootList.get(params.list_id)
+        def raidMember = list.addPlayerCharacter(pc)
         raidMember.note = params.note
         raidMember.substitute = params?.boolean('substitute')
         render raidMember as JSON

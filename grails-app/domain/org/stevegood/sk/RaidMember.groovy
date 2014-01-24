@@ -9,18 +9,18 @@ class RaidMember {
     Date dateCreated
     Date lastUpdated
 
-//    Raid raid
+    LootList lootList
     PlayerCharacter character
     boolean substitute = false
     boolean onLeave = false
     boolean tempActive = false
-//    int listPosition
+    int listPosition
     String note
 
     static constraints = {
         note nullable: true, blank: true
-//        raid unique: ['character']
-//        listPosition nullable: false
+        lootList unique: ['character']
+        listPosition nullable: false
         tempActive nullable: true
     }
 
@@ -28,18 +28,16 @@ class RaidMember {
         note type: 'text'
     }
 
-    static RaidMember create(Raid raid, PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
-//        RaidMember raidMember = RaidMember.findOrCreateByRaidAndCharacter(raid, character)
-//        raidMember.substitute = substitute
-//        raidMember.onLeave = onLeave
-//        def characterClassCount = 0
-//        raid.members.each {
-//            if (it.character.characterClass == character.characterClass) {
-//                characterClassCount++
-//            }
-//        }
-//        raidMember.listPosition = characterClassCount
-//        raidMember.save(flush: true)
+    static RaidMember create(LootList lootList, PlayerCharacter character, boolean substitute=false, boolean onLeave=false) {
+        def listMembersCount = RaidMember.countByLootList(lootList)
+        if (listMembersCount > 0) {
+            listMembersCount++
+        }
+        RaidMember raidMember = RaidMember.findOrCreateByLootListAndCharacter(lootList, character)
+        raidMember.substitute = substitute
+        raidMember.onLeave = onLeave
+        raidMember.listPosition = listMembersCount
+        raidMember.save(flush: true)
     }
 
     String toString() {

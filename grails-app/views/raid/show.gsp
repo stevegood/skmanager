@@ -76,34 +76,34 @@
 
     <div id="lists" class="container">
         <div class="row">
-            <g:each in="${raidMembersByClass}" var="classMap">
-                <div class="col-lg-${colWidth}">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">${classMap.characterClass.name}</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="container">
+            %{--<g:each in="${raidMembersByClass}" var="classMap">--}%
+                %{--<div class="col-lg-${colWidth}">--}%
+                    %{--<div class="panel panel-default">--}%
+                        %{--<div class="panel-heading">--}%
+                            %{--<h3 class="panel-title">${classMap.characterClass.name}</h3>--}%
+                        %{--</div>--}%
+                        %{--<div class="panel-body">--}%
+                            %{--<div class="container">--}%
                                 %{-- list characters by class --}%
-                                <div id="${classMap.characterClass.name}-members" class="${canManage ? 'sortable' : ''}">
-                                    <g:each in="${classMap.members}" var="raidMember" status="i">
-                                        <g:render template="raidMember" model="${[sortable: true, canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />
-                                    </g:each>
-                                </div>
+                                %{--<div id="${classMap.characterClass.name}-members" class="${canManage ? 'sortable' : ''}">--}%
+                                    %{--<g:each in="${classMap.members}" var="raidMember" status="i">--}%
+                                        %{--<g:render template="raidMember" model="${[sortable: true, canManage: canManage, raidMember: raidMember, last: i < classMap.members.size()-1]}" />--}%
+                                    %{--</g:each>--}%
+                                %{--</div>--}%
 
-                                <g:if test="${classMap.subs.size()}">
-                                    <hr>
-                                    <div id="${classMap.characterClass.name}-subs">
-                                        <g:each in="${classMap.subs}" var="raidMember" status="i">
-                                            <g:render template="raidMember" model="${[sortable: false, canManage: canManage, raidMember: raidMember, last: i < classMap.subs.size()-1]}" />
-                                        </g:each>
-                                    </div>
-                                </g:if>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </g:each>
+                                %{--<g:if test="${classMap.subs.size()}">--}%
+                                    %{--<hr>--}%
+                                    %{--<div id="${classMap.characterClass.name}-subs">--}%
+                                        %{--<g:each in="${classMap.subs}" var="raidMember" status="i">--}%
+                                            %{--<g:render template="raidMember" model="${[sortable: false, canManage: canManage, raidMember: raidMember, last: i < classMap.subs.size()-1]}" />--}%
+                                        %{--</g:each>--}%
+                                    %{--</div>--}%
+                                %{--</g:if>--}%
+                            %{--</div>--}%
+                        %{--</div>--}%
+                    %{--</div>--}%
+                %{--</div>--}%
+            %{--</g:each>--}%
         </div>
     </div>
 
