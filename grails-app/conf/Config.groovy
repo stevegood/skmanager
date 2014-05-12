@@ -143,7 +143,24 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/userRole/**':                   ['ROLE_ADMIN'],
     '/**':                            ['IS_AUTHENTICATED_FULLY'],
     '/raid/show/**':                  ['permitAll'],
-    '/gameRole/icon/**':              ['permitAll']
+    '/gameRole/icon/**':              ['permitAll'],
+    '/skmanager/':                     ['permitAll'],
+    '/skmanager/index':                ['permitAll'],
+    '/skmanager/index.gsp':            ['permitAll'],
+    '/skmanager/**/js/**':             ['permitAll'],
+    '/skmanager/**/css/**':            ['permitAll'],
+    '/skmanager/**/images/**':         ['permitAll'],
+    '/skmanager/**/favicon.ico':       ['permitAll'],
+    '/skmanager/user/**':              ['ROLE_ADMIN'],
+    '/skmanager/user/show/**':         ['IS_AUTHENTICATED_FULLY'],
+    '/skmanager/user/update/**':       ['IS_AUTHENTICATED_FULLY'],
+    '/skmanager/user/register':        ['permitAll'],
+    '/skmanager/user/saveRegistration':['permitAll'],
+    '/skmanager/admin/**':             ['ROLE_ADMIN'],
+    '/skmanager/userRole/**':          ['ROLE_ADMIN'],
+    '/skmanager/**':                   ['IS_AUTHENTICATED_FULLY'],
+    '/skmanager/raid/show/**':         ['permitAll'],
+    '/skmanager/gameRole/icon/**':     ['permitAll']
 ]
 
 auditLog.verbose = true
