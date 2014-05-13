@@ -23,7 +23,7 @@ skmanager.buildModal = function(playerCharacters, $modal, $select, $note) {
 };
 
 skmanager.addCharacterToRaid = function($select, $note, $substitute, $modal) {
-    $.getJSON('/raid/addCharacter', {raid_id: skmanager.raid.id, pc_id: $select.val(), substitute: $substitute.is(':checked'), note: $note.val()}, function(result){
+    $.getJSON(skmanager.addCharacterUrl, {raid_id: skmanager.raid.id, pc_id: $select.val(), substitute: $substitute.is(':checked'), note: $note.val()}, function(result){
         // handle the result by reloading the page
         $modal.modal('hide');
         window.location = window.location;
@@ -50,7 +50,7 @@ jQuery(function($){
 
     $addCharacterBtn.on('click', function(){
         // todo: get the PCs
-        $.getJSON('/playerCharacter/availableForRaid', {raid_id: skmanager.raid.id}, function(result){
+        $.getJSON(skmanager.availableForRaidUrl, {raid_id: skmanager.raid.id}, function(result){
             // make $search a typeahead field
             $search.typeahead({
                 name: 'characterSearch',
@@ -94,7 +94,7 @@ jQuery(function($){
             stop: function(event, ui) {
                 var item_ids = $this.sortable('toArray');
                 if (item_ids.length) {
-                    $.getJSON('/raidMember/repositionMembers', {raid_member_ids: item_ids.join(), raid_id: skmanager.raid.id}, function(result){
+                    $.getJSON(skmanager.repositionMembersUrl, {raid_member_ids: item_ids.join(), raid_id: skmanager.raid.id}, function(result){
                         window.location = window.location
                     });
                 }

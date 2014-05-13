@@ -198,6 +198,9 @@
     var skmanager = skmanager || {};
         skmanager.raid = {id: ${raidInstance.id}};
         skmanager.raidString = "${raidInstance.toRaidString()}";
+        skmanager.addCharacterUrl = "${createLink(controller: 'raid', action: 'addCharacter')}";
+        skmanager.availableForRaidUrl = "${createLink(controller: 'playerCharacter', action: 'availableForRaid')}";
+        skmanager.repositionMembersUrl = "${createLink(controller: 'raidMember', action: 'repositionMembers')}";
     </r:script>
     <script type="text/javascript" src="${resource(dir: 'js/raid', file: 'show.js')}"></script>
 
