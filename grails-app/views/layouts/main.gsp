@@ -15,7 +15,6 @@
 		<r:layoutResources />
 	</head>
 	<body>
-
         %{-- navigation --}%
         <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -104,6 +103,16 @@
         %{-- body --}%
 		<g:layoutBody/>
         %{-- footer --}%
+        <hr/>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    &copy; ${new Date().format('yyyy')} <a href="http://stevegood.org" target="_blank">Steve Good</a>
+                    - SKManager v<g:meta name="app.version" />
+                    - <a href="http://github.com/stevegood/skmanager" target="_blank">Fork on GitHub</a>
+                </div>
+            </div>
+        </div>
 		<r:layoutResources />
 	</body>
 </html>
