@@ -5,7 +5,7 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
-//grails.project.war.file = "target/${appName}-${appVersion}.war"
+grails.project.war.file = "target/${appName}.war"
 
 grails.project.fork = [
     // configure settings for compilation JVM, note that if you alter the Groovy version forked compilation is required
@@ -52,6 +52,8 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         // runtime 'mysql:mysql-connector-java:5.1.24'
         runtime 'org.jumpmind.symmetric.jdbc:postgresql:9.2-1002-jdbc4'
+        compile "org.springframework.cloud:cloudfoundry-connector:0.9.5"
+        compile "org.springframework.cloud:spring-service-connector:0.9.5"
     }
 
     plugins {

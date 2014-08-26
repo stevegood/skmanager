@@ -1,3 +1,11 @@
+import org.springframework.cloud.CloudFactory
+
+def cloud
+
+try {
+    cloud = new CloudFactory().cloud
+} catch(e) {}
+
 dataSource {
     pooled = true
     driverClassName = "org.h2.Driver"
@@ -27,8 +35,15 @@ environments {
     }
     production {
         dataSource {
+            if (cloud) {
+                def dbInfo = cloud.getServiceInfo('skmanager-db-postgres') // CHANGE THIS TO MATCH YOUR SERVICE NAME
+                url = dbInfo.jdbcUrl
+                username = dbInfo.userName
+                password = dbInfo.password
+            } else {
+                url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            }
             dbCreate = "update"
-            url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
             properties {
                maxActive = -1
                minEvictableIdleTimeMillis=1800000
