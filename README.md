@@ -21,3 +21,4 @@ Edit ```grails-app/conf/DataSource.groovy```
     def dbInfo = cloud.getServiceInfo('skmanager-db-postgres') // CHANGE THIS TO MATCH YOUR SERVICE NAME
     
 Then execute the build script: ```./gradlew grails-clean grails-war cfPush```
+
