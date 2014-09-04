@@ -42,19 +42,19 @@ environments {
                 password = dbInfo.password
             } else {
                 url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+                properties {
+                   maxActive = -1
+                   minEvictableIdleTimeMillis=1800000
+                   timeBetweenEvictionRunsMillis=1800000
+                   numTestsPerEvictionRun=3
+                   testOnBorrow=true
+                   testWhileIdle=true
+                   testOnReturn=false
+                   validationQuery="SELECT 1"
+                   jdbcInterceptors="ConnectionState"
+                }
             }
             dbCreate = "update"
-            properties {
-               maxActive = -1
-               minEvictableIdleTimeMillis=1800000
-               timeBetweenEvictionRunsMillis=1800000
-               numTestsPerEvictionRun=3
-               testOnBorrow=true
-               testWhileIdle=true
-               testOnReturn=false
-               validationQuery="SELECT 1"
-               jdbcInterceptors="ConnectionState"
-            }
         }
     }
 }
